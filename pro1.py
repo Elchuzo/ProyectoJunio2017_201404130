@@ -322,8 +322,10 @@ class MatrizDispersa(object):
     def buscar(self,x,y):
         horizontal = False
         vertical = False
+        actual = self.cabeza
         if self.cabeza is not None:
             while actual.derecha is not None:
+                print(actual.derecha.x + " = " + x)
                 if actual.derecha.x == x:
                     actual = actual.derecha
                     horizontal = True
@@ -334,6 +336,7 @@ class MatrizDispersa(object):
                     break
         if horizontal:
             while actual.abajo is not None:
+                print(str(actual.derecha.y) + " = " + str(y))
                 if actual.abajo.y == y:
                     actual = actual.derecha
                     vertical = True
@@ -526,7 +529,8 @@ def disparar():
             if us.nombre == juegoactual.turno:
                 dis = ar.buscar(ar.raiz,juegoactual.jugador2)
                 if nivel == '1':
-                    nod = dis.satelites.buscar(posx,int(posy))
+                    nod = dis.cubo.satelites.buscar(posx,int(posy))
+                    print('satelites: ' + posx + " , " +  posy)
                     if nod is not None:
                         if not nod.hundido:
                             nod.hundido = True
@@ -536,7 +540,7 @@ def disparar():
                     else:
                         return 'fallo'
                 elif nivel == '2':
-                    nod = dis.aviones.buscar(posx,int(posy))
+                    nod = dis.cubo.aviones.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
                             nod.hundido = True
@@ -546,7 +550,7 @@ def disparar():
                     else:
                         return 'fallo'
                 elif nivel == '3':
-                    nod = dis.barcos.buscar(posx,int(posy))
+                    nod = dis.cubo.barcos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
                             nod.hundido = True
@@ -556,7 +560,7 @@ def disparar():
                     else:
                         return 'fallo'
                 elif nivel == '4':
-                    nod = dis.submarinos.buscar(posx,int(posy))
+                    nod = dis.cubo.submarinos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
                             nod.hundido = True
@@ -583,7 +587,7 @@ def disparar():
                     else:
                         return 'fallo'
                 elif nivel == '2':
-                    nod = dis.aviones.buscar(posx,int(posy))
+                    nod = dis.cubo.aviones.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
                             nod.hundido = True
@@ -593,7 +597,7 @@ def disparar():
                     else:
                         return 'fallo'
                 elif nivel == '3':
-                    nod = dis.barcos.buscar(posx,int(posy))
+                    nod = dis.cubo.barcos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
                             nod.hundido = True
@@ -603,7 +607,7 @@ def disparar():
                     else:
                         return 'fallo'
                 elif nivel == '4':
-                    nod = dis.submarinos.buscar(posx,int(posy))
+                    nod = dis.cubo.submarinos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
                             nod.hundido = True
@@ -733,7 +737,7 @@ def cargar():
         tiempo = str(request.form['tiempo'])
         tipodisparo = str(request.form['tipodisparo'])
         numerodisparos = str(request.form['numerodisparos'])
-
+        juegoactual.turno = usuario1
         juegoactual.jugador1 = usuario1
         juegoactual.jugador2 = usuario2
         juegoactual.x = int(tamx)
@@ -755,21 +759,25 @@ def graf():
         if imagen == 'satelites':
             us = ar.buscar(ar.raiz,nick)
             us.cubo.satelites.graficar(imagen)
+            print('graficando satelites')
             with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'barcos':
             us = ar.buscar(ar.raiz,nick)
+            print('graficando barcos')
             us.cubo.barcos.graficar(imagen)
             with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'aviones':
             us = ar.buscar(ar.raiz,nick)
             us.cubo.aviones.graficar(imagen)
+            print('graficando aviones')
             with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'submarinos':
             us = ar.buscar(ar.raiz,nick)
             us.cubo.submarinos.graficar(imagen)
+            print('graficando submarinos')
             with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
     elif nombre == 'arbol':
