@@ -119,11 +119,11 @@ class Usuario(object):
         self.lista = ListaDoble()
         self.cubo = Cubo()
     def __lt__(self,other):
-        return (self.nombre.lower() < other.nombre.lower())
+        return (self.nombre.upper() < other.nombre.upper())
     def __eq__(self,other):
-        return(self.nombre.lower() == other.nombre.lower())
+        return(self.nombre.upper() == other.nombre.upper())
     def __gt__(self,other):
-        return(self.nombre.lower() > other.nombre.lower())
+        return(self.nombre.upper() > other.nombre.upper())
     def __str__(self):
         return self.nombre
 
@@ -417,10 +417,10 @@ class ArbolBinario(object):
             print('No existe')
             return None
         else:
-            if valor == raiz.dato.nombre:
+            if valor.upper() == raiz.dato.nombre.upper():
                 print(str(raiz.dato) + ' existe')
                 return raiz.dato
-            elif valor < raiz.dato.nombre:
+            elif valor.upper() < raiz.dato.nombre.upper():
                 return self.buscar(raiz.izquierda,valor)
             else:
                 return self.buscar(raiz.derecha,valor)
@@ -661,6 +661,7 @@ def iniciar():
     nombre = str(request.form['nombre'])
     contra = str(request.form['contra'])
     dato = ar.buscar(ar.raiz,nombre)
+    print(dato.contrasena)
     if dato is not None:
         if dato.contrasena == contra:
             return "True"
@@ -680,7 +681,7 @@ def cargar():
         u = Usuario(nombre,contra,int(conectado))
         ar.insertar(u)
         print(nombre,contra,conectado)
-        return nombre
+        return "True"
     elif tipo == 'naves':
         jugador = str(request.form['jugador'])
         columna = str(request.form['columna'])
