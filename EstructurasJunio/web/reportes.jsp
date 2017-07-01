@@ -43,5 +43,15 @@
            
         %>
         
+        <br>
+        <br>
+        <br>
+        <h2>arbol</h2>
+        <%
+            
+        out.println("<img src=\"" + con.graficar("arbol",session.getAttribute("nickname").toString(),"prueba") + "\">");
+           
+        %>
+        
     </body>
 </html>

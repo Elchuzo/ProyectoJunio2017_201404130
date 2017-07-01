@@ -458,24 +458,23 @@ class ArbolBinario(object):
         else:
             p.derecha = a.izquierda
         return a
+    def graficar(self,raiz,contador,dot):
+        if raiz is None:
+            return
+        print (raiz.dato)
+        if (raiz.izquierda is not None):
+            dot.node(str(raiz.dato))
+            dot.node(str(raiz.izquierda.dato))
+            dot.edge(str(raiz.dato),str(raiz.izquierda.dato))
+        if(raiz.derecha is not None):
+            dot.node(str(raiz.dato))
+            dot.node(str(raiz.derecha.dato))
+            dot.edge(str(raiz.dato),str(raiz.derecha.dato))
+        contador+=1
+        self.graficar(raiz.izquierda,contador,dot)
+        self.graficar(raiz.derecha,contador,dot)
+        return dot
 
-dot = Digraph(comment='Prueba',format='png')
-
-def prebinario(raiz,contador):
-    if raiz is None:
-        return
-    print (raiz.dato)
-    if (raiz.izquierda is not None):
-        dot.node(str(raiz.dato))
-        dot.node(str(raiz.izquierda.dato))
-        dot.edge(str(raiz.dato),str(raiz.izquierda.dato))
-    if(raiz.derecha is not None):
-        dot.node(str(raiz.dato))
-        dot.node(str(raiz.derecha.dato))
-        dot.edge(str(raiz.dato),str(raiz.derecha.dato))
-    contador+=1
-    prebinario(raiz.izquierda,contador)
-    prebinario(raiz.derecha,contador)
 
 def Reprint(s):
     try:
@@ -781,9 +780,10 @@ def graf():
             with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
     elif nombre == 'arbol':
-        prebinario(ar.raiz,0)
-        dot.render('prueba.gv',cleanup=True)
-        dot.save('prueba',"C:\\Users\\Oscar\\Desktop")
+        dot = Digraph(comment='Prueba',format='png')
+        dot = ar.graficar(ar.raiz,0,dot)
+        dot.render('prueba',cleanup=True)
+        dot.save('prueba',r"C:\\Users\\Oscar\\Desktop")
         with open("C:\\Users\\Oscar\\Desktop\\prueba.png",'rb') as imageFile:
             cadena = base64.b64encode(imageFile.read())
     return cadena
@@ -820,8 +820,3 @@ sat.colocar(mat,'G',5)
 bar.colocar(mat,'H',10)
 mat.graficar()
 """
-
-
-print('preorder')
-prebinario(ar.raiz,0)
-print('')
