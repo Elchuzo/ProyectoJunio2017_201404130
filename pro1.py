@@ -12,6 +12,7 @@ def sumar(x,y):
     c = ord(x.upper())
     n = c + y
     return str(chr(n))
+
 def restar(x,y):
     c = ord(x.upper())
     n = c - y
@@ -32,6 +33,7 @@ class juego(object):
         self.jugador2=None
         self.turno=None
         self.numerodisparos = 0
+
 
 class Barco(object):
     def __init__(self,modo=None,direccion=None):
@@ -113,6 +115,8 @@ class Usuario(object):
         self.conectado=conectado
         self.lista = ListaDoble()
         self.cubo = Cubo()
+        self.acertados = Cubo()
+        self.fallados = Cubo()
     def __lt__(self,other):
         return (self.nombre.upper() < other.nombre.upper())
     def __eq__(self,other):
@@ -355,9 +359,6 @@ class MatrizDispersa(object):
             return None
 
 
-
-
-
 class NodoDoble(object):
     def __init__(self,dato=None):
         self.dato=dato
@@ -535,6 +536,18 @@ class Tempo(object):
                 return 1
         return 0
 
+class Disparo(object):
+    def __init__(self,x,y,tipo,resultado,emisor,receptor,fecha,numero,tiempo=0):
+        self.x = x
+        self.y = y
+        self.tipo = tipo
+        self.resultado = resultado
+        self.emisor = emisor
+        self.receptor = receptor
+        self.fecha = fecha
+        self.tiempo = tiempo
+        self.numero = numero
+
 tem = Tempo()
 
 ar = ArbolBinario()
@@ -566,41 +579,49 @@ def disparar():
                     print('satelites: ' + posx + " , " +  posy)
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.satelites.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.satelites.insertar(posx,int(posy))
                         return 'fallo'
                 elif nivel == '2':
                     nod = dis.cubo.aviones.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.aviones.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.aviones.insertar(posx,int(posy))
                         return 'fallo'
                 elif nivel == '3':
                     nod = dis.cubo.barcos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.barcos.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.barcos.insertar(posx,int(posy))
                         return 'fallo'
                 elif nivel == '4':
                     nod = dis.cubo.submarinos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.subamrinos.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.subamrinos.insertar(posx,int(posy))
                         return 'fallo'
                 else:
                     return 'nivel incorrecto'
@@ -613,41 +634,49 @@ def disparar():
                     nod = dis.satelites.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.satelites.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.satelites.insertar(posx,int(posy))
                         return 'fallo'
                 elif nivel == '2':
                     nod = dis.cubo.aviones.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.aviones.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.aviones.insertar(posx,int(posy))
                         return 'fallo'
                 elif nivel == '3':
                     nod = dis.cubo.barcos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.barcos.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.barcos.insertar(posx,int(posy))
                         return 'fallo'
                 elif nivel == '4':
                     nod = dis.cubo.submarinos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            us.acertados.submarinos.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
-                            return 'nodo ya hunido'
+                            return 'nodo ya hundido'
                     else:
+                        us.fallados.submarinos.insertar(posx,int(posy))
                         return 'fallo'
                 else:
                     return 'nivel incorrecto'
@@ -782,9 +811,11 @@ def cargar():
         juegoactual.tiempo = tiempo
         juegoactual.tipo_disparo = tipodisparo
         juegoactual.numerodisparos = numerodisparos
+        print('tiempo de juego: ' + tiempo + ' segundos')
         return 'juego creado'
 
 @app.route('/jugar',methods=['POST'])
+
 
 @app.route('/graficar',methods=['POST'])
 def graf():

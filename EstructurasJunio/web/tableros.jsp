@@ -17,7 +17,13 @@
     
     
     <form action = "disparar.jsp" method = "post">
-        Nivel a disparar: <input type = "text" name = "nivel" size = "50" />
+        Nivel:
+        <select name = "nivel">
+            <option value="1">1. Satelites</option>
+            <option value="2">2. Aviones</option>
+            <option value="3">3. Barcos</option>
+            <option value="4">4. Submarinos</option>
+          </select>
         <br />
         Columna:  <input type = "text" name = "x" size = "50" />
          <br />

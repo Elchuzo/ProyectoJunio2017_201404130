@@ -129,24 +129,48 @@ public class Conexion {
          else if("juego".equals(tipo))
                  {
                  while ((nextLine = reader.readNext()) != null) {            
-                     RequestBody formBody = new FormEncodingBuilder()
-                         .add("tipo","juego")
-                         .add("usuario1",nextLine[0])
-                         .add("usuario2",nextLine[1])
-                         .add("tamx",nextLine[2])
-                         .add("tamy",nextLine[3])
-                             .add("variante",nextLine[4])
-                             .add("tiempo",nextLine[5])
+                     
+                             if(nextLine.length == 8)
+                             {
+                             String[] tiempo = nextLine[5].split(":");
+                             int mins = Integer.parseInt(tiempo[0]);
+                             int seg = Integer.parseInt(tiempo[1]);
+                             int total = mins*60 + seg;
+                             RequestBody formBody = new FormEncodingBuilder()    
+                             .add("tipo","juego")
+                             .add("usuario1",nextLine[0])
+                             .add("usuario2",nextLine[1])
+                             .add("tamx",nextLine[2])
+                             .add("tamy",nextLine[3])
+                             .add("variante",nextLine[4])                           
+                             .add("tiempo",String.valueOf(total))
                              .add("tipodisparo",nextLine[6])
-                             .add("numerodisparos",nextLine[7])
-                             
+                             .add("numerodisparos",nextLine[7])                          
                          .build();
-                         String r;
+                             String r;
                          r = getString("carga", formBody);
+                             }
+                        else
+                             {
+                             RequestBody formBody = new FormEncodingBuilder()    
+                             .add("tipo","juego")
+                             .add("usuario1",nextLine[0])
+                             .add("usuario2",nextLine[1])
+                             .add("tamx",nextLine[2])
+                             .add("tamy",nextLine[3])
+                             .add("variante",nextLine[4])                           
+                             .add("tipodisparo",nextLine[5])
+                             .add("numerodisparos",nextLine[6])    
+                                     .add("tiempo","0")
+                         .build();
+                             String r;
+                         r = getString("carga", formBody);    
+                             }         
+                         
+                         
+                         
                  }
                  }
-     
-            
             }
        
 
