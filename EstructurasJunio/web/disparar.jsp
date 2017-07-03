@@ -7,4 +7,5 @@
     String posy = request.getParameter("y");
     String res = con.disparar(nickname, nivel, posx, posy);
     out.println(res);
+    response.sendRedirect(request.getContextPath() + "/tableros.jsp?resultado="+res);
 %>

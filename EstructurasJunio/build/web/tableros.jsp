@@ -11,10 +11,31 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Tableros</title>
+
+   </head>
+   
+   <body>
+               <nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Battleship</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="#">Home</a></li>
+      <li class="active"><a href="carga.jsp">Cargar Archivo</a></li>
+      <li><a href="menugraficas.jsp">Reportes</a></li>
+      <li><a href="consultas.jsp">Consultas</a></li>
+      <li><a href="tableros.jsp">Juego Actual</a></li>
+      <li><a href="Cerrar.jsp">Cerrar Sesión</a></li>
+    </ul>
+  </div>
+</nav>
         <%Conexion con = new Conexion();%>
     <%String[] coordenadas = con.parametros().split(",");
       CSVReader reader = null;
       String[] nextLine = null;
+      String res = "..."; 
+      res = request.getParameter("resultado");
     %>
     </head>
     
@@ -36,7 +57,10 @@
          <br />
          <input type = "submit" value = "Disparar" />
       </form>
-    
+    <%if(res != null)
+    {      
+        out.print(res);
+}%>
     <br>
     <br>
     <t2>Naves Propias</t2>
