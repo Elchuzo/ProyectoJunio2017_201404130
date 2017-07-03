@@ -26,7 +26,7 @@
     <ul class="nav navbar-nav">
       <li class="active"><a href="#">Home</a></li>
       <li><a href="carga.jsp">Cargar Archivo</a></li>
-      <li><a href="reportes.jsp">Reportes</a></li>
+      <li><a href="menugraficas.jsp">Reportes</a></li>
       <li><a href="consultas.jsp">Consultas</a></li>
       <li><a href="tableros.jsp">Juego Actual</a></li>
       <li><a href="Cerrar.jsp">Cerrar Sesión</a></li>

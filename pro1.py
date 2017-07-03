@@ -3,6 +3,7 @@ from graphviz import Digraph
 import base64
 import threading
 import time
+import datetime
 from threading import Timer
 import math
 app = Flask("Proyecto")
@@ -37,6 +38,7 @@ class juego(object):
         self.jugador2=None
         self.turno=None
         self.numerodisparos = 0
+        self.disparos=0
     def cambiarturno(self):
         if self.jugador1.upper() == self.turno.upper():
             self.turno = self.jugador2
@@ -357,7 +359,7 @@ class MatrizDispersa(object):
                     break
         if horizontal:
             while actual.abajo is not None:
-                print(str(actual.derecha.y) + " = " + str(y))
+                #print(str(actual.derecha.y) + " = " + str(y))
                 if actual.abajo.y == y:
                     actual = actual.derecha
                     vertical = True
@@ -586,9 +588,10 @@ class Tempo(object):
         return 0
 
 class Disparo(object):
-    def __init__(self,x,y,tipo,resultado,emisor,receptor,fecha,numero,tiempo=0):
+    def __init__(self,x,y,nivel,tipo,resultado,emisor,receptor,fecha,numero,tiempo=0):
         self.x = x
         self.y = y
+        self.nivel = nivel
         self.tipo = tipo
         self.resultado = resultado
         self.emisor = emisor
@@ -603,28 +606,38 @@ ar = ArbolBinario()
 disparos = ListaDoble()
 juegoactual = juego()
 
+def revisarsegundos():
+    tiempo = tem.final - time.time()
+    revisar()
+    return (tiempo)
+
 def contar(tiempo):
     #tiempo = str(request.form['tiempo'])
     tem.inicio = time.time()
     tem.final = time.time() + int(tiempo)
     return 'iniciado'
 
-def disparo(x,y,tipo,resultado,emisor,receptor,fecha,tiempo=0):
+def disparo(x,y,nivel,tipo,resultado,emisor,receptor,fecha,tiempo=0):
     if juegoactual.variante == 2:
-        if juegoactual.numerodisparos == 0:
+        if juegoactual.disparos == 0:
             contar(juegoactual.tiempo)
-    juegoactual.numerodisparos += 1
-    dis = Disparo(x,y,tipo,resultado,emisor,receptor,fecha,numero,tiempo)
+    juegoactual.disparos += 1
+    dis = Disparo(x,y,nivel,tipo,resultado,emisor,receptor,fecha,juegoactual.disparos,tiempo)
     disparos.insertar(dis)
 
 @app.route('/disparar',methods=['POST'])
 def disparar():
+    if juegoactual.disparos > 0:
+        if revisarsegundos() > 0:
+            pass
+        else:
+            print("el juego ha acabado")
     jugador = str(request.form['jugador'])
     nivel = str(request.form['nivel'])
     posx = str(request.form['posx'])
     posy = str(request.form['posy'])
     us = ar.buscar(ar.raiz,jugador)
-    print('entro')
+    print('disparo')
     if not Reprint(posy):
         return 'Valores incorrectos'
     else:
@@ -643,49 +656,64 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             us.acertados.satelites.insertar(posx,int(posy))
-                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                             nod.hundido = True
+                            juegoactual.cambiarturno()
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
                         us.fallados.satelites.insertar(posx,int(posy))
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 elif nivel == '2':
                     nod = dis.cubo.aviones.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,2,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                             us.acertados.aviones.insertar(posx,int(posy))
                             nod.hundido = True
+                            juegoactual.cambiarturno()
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
                         us.fallados.aviones.insertar(posx,int(posy))
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,2,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 elif nivel == '3':
                     nod = dis.cubo.barcos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,3,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                             us.acertados.barcos.insertar(posx,int(posy))
                             nod.hundido = True
+                            juegoactual.cambiarturno()
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,3,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                         us.fallados.barcos.insertar(posx,int(posy))
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 elif nivel == '4':
                     nod = dis.cubo.submarinos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,4,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                             us.acertados.subamrinos.insertar(posx,int(posy))
                             nod.hundido = True
+                            juegoactual.cambiarturno()
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,4,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                         us.fallados.subamrinos.insertar(posx,int(posy))
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 else:
                     return 'nivel incorrecto'
@@ -695,52 +723,67 @@ def disparar():
             if us.nombre == juegoactual.turno:
                 dis = ar.buscar(ar.raiz,juegoactual.jugador1)
                 if nivel == '1':
-                    nod = dis.satelites.buscar(posx,int(posy))
+                    nod = dis.cubo.satelites.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                             us.acertados.satelites.insertar(posx,int(posy))
                             nod.hundido = True
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                         us.fallados.satelites.insertar(posx,int(posy))
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 elif nivel == '2':
                     nod = dis.cubo.aviones.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,2,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                             us.acertados.aviones.insertar(posx,int(posy))
                             nod.hundido = True
+                            juegoactual.cambiarturno()
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,2,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                         us.fallados.aviones.insertar(posx,int(posy))
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 elif nivel == '3':
                     nod = dis.cubo.barcos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,3,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                             us.acertados.barcos.insertar(posx,int(posy))
                             nod.hundido = True
+                            juegoactual.cambiarturno()
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,3,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                         us.fallados.barcos.insertar(posx,int(posy))
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 elif nivel == '4':
                     nod = dis.cubo.submarinos.buscar(posx,int(posy))
                     if nod is not None:
                         if not nod.hundido:
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,4,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                             us.acertados.submarinos.insertar(posx,int(posy))
                             nod.hundido = True
+                            juegoactual.cambiarturno()
                             return 'exito'
                         else:
                             return 'nodo ya hundido'
                     else:
+                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,4,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
                         us.fallados.submarinos.insertar(posx,int(posy))
+                        juegoactual.cambiarturno()
                         return 'fallo'
                 else:
                     return 'nivel incorrecto'
@@ -758,7 +801,8 @@ def revisar():
     t = divmod(tiempo,60)
     dec, segundos = math.modf(t[1])
     print ('minutos: ' + str(t[0]) + ' segundos: ' + str(segundos))
-    return ('hola')
+    cad = 'minutos: ' + str(t[0]) + ' segundos: ' + str(segundos)
+    return (cad)
 
 @app.route('/parametros',methods=['POST'])
 def parametros():
@@ -766,6 +810,8 @@ def parametros():
     y = juegoactual.y
     cadena = str(x) + "," + str(y)
     return (cadena)
+
+@app.route('/')
 
 @app.route('/tableros',methods=['POST'])
 def tableros():
@@ -884,6 +930,7 @@ def cargar():
         juegoactual.tiempo = tiempo
         juegoactual.tipo_disparo = tipodisparo
         juegoactual.numerodisparos = numerodisparos
+        juegoactual.disparos =0
         print('tiempo de juego: ' + tiempo + ' segundos')
         return 'juego creado'
 
@@ -925,6 +972,7 @@ def graf():
             print('graficando submarinos')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
+        return cadena
     elif nombre == 'arbol':
         dot = Digraph(comment='Arbol',format='png')
         dot = ar.graficar(ar.raiz,0,dot)
@@ -932,6 +980,7 @@ def graf():
         dot.save(imagen,r"C:\\Users\\Abraham Jelkmann\\Desktop")
         with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
             cadena = base64.b64encode(imageFile.read())
+        return cadena
     elif nombre == 'arbolconlistas':
         dot = Digraph(comment='arbolconlistas',format='png')
         dot = ar.graficarconlista(ar.raiz,0,dot)
@@ -939,7 +988,61 @@ def graf():
         dot.save(imagen,r"C:\\Users\\Abraham Jelkmann\\Desktop")
         with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
             cadena = base64.b64encode(imageFile.read())
-    return cadena
+        return cadena
+    elif nombre == 'acertados':
+        if imagen == 'satelites':
+            us = ar.buscar(ar.raiz,nick)
+            us.acertados.satelites.graficar(imagen)
+            print('graficando satelites')
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        elif imagen == 'barcos':
+            us = ar.buscar(ar.raiz,nick)
+            print('graficando barcos')
+            us.acertados.barcos.graficar(imagen)
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        elif imagen == 'aviones':
+            us = ar.buscar(ar.raiz,nick)
+            us.acertados.aviones.graficar(imagen)
+            print('graficando aviones')
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        elif imagen == 'submarinos':
+            us = ar.buscar(ar.raiz,nick)
+            us.acertados.submarinos.graficar(imagen)
+            print('graficando submarinos')
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        return cadena
+    elif nombre == 'fallados':
+        if imagen == 'satelites':
+            us = ar.buscar(ar.raiz,nick)
+            us.fallados.satelites.graficar(imagen)
+            print('graficando satelites')
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        elif imagen == 'barcos':
+            us = ar.buscar(ar.raiz,nick)
+            print('graficando barcos')
+            us.fallados.barcos.graficar(imagen)
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        elif imagen == 'aviones':
+            us = ar.buscar(ar.raiz,nick)
+            us.fallados.aviones.graficar(imagen)
+            print('graficando aviones')
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        elif imagen == 'submarinos':
+            us = ar.buscar(ar.raiz,nick)
+            us.fallados.submarinos.graficar(imagen)
+            print('graficando submarinos')
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+                cadena = base64.b64encode(imageFile.read())
+        return cadena
+    else:
+        return 'error'
 
 #@app.route('/')
 

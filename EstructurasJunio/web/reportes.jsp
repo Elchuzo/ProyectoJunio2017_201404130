@@ -8,44 +8,7 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Matriz</h1>
-        <h2>satelites</h2>
-        <%
-            
-        out.println("<img src=\"" + con.graficar("matriz",session.getAttribute("nickname").toString(),"satelites") + "\">");
-               
-        %>
-        <br>
-        <br>
-        <br>
-        <h2>barcos</h2>
-        <%
-            
-        out.println("<img src=\"" + con.graficar("matriz",session.getAttribute("nickname").toString(),"barcos") + "\">");
-               
-        %>
-        <br>
-        <br>
-        <br>
-        <h2>aviones</h2>
-        <%
-            
-        out.println("<img src=\"" + con.graficar("matriz",session.getAttribute("nickname").toString(),"aviones") + "\">");
-                
-        %>
-        <br>
-        <br>
-        <br>
-        <h2>submarinos</h2>
-        <%
-            
-        out.println("<img src=\"" + con.graficar("matriz",session.getAttribute("nickname").toString(),"submarinos") + "\">");
-           
-        %>
         
-        <br>
-        <br>
-        <br>
         <h2>arbol</h2>
         <%
             
