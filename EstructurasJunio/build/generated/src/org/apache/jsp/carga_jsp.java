@@ -67,6 +67,7 @@ public final class carga_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("      <li><a href=\"reportes.jsp\">Reportes</a></li>\n");
       out.write("      <li><a href=\"consultas.jsp\">Consultas</a></li>\n");
       out.write("      <li><a href=\"tableros.jsp\">Juego Actual</a></li>\n");
+      out.write("      <li><a href=\"Cerrar.jsp\">Cerrar Sesión</a></li>\n");
       out.write("    </ul>\n");
       out.write("  </div>\n");
       out.write("</nav>\n");

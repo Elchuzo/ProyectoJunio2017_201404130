@@ -21,11 +21,6 @@ class nave(object):
     def __init__(self,espacios=0):
         self.espacios=espacios
 
-class tablero(object):
-    def __init__(self,niveles=0,tiros=None):
-        self.niveles=niveles
-        self.tiros=tiros
-
 class juego(object):
     def __init__(self,naves=0,tipo_disparo=None,x=0,y=0,variante=None):
         self.tipo_disparo=tipo_disparo
@@ -126,6 +121,8 @@ class Usuario(object):
         return(self.nombre.upper() > other.nombre.upper())
     def __str__(self):
         return self.nombre
+    def __repr__(self):
+        return (self.nombre + ' ' + str(self.lista))
 
 class Cubo(object):
     def __init__(self):
@@ -145,13 +142,20 @@ class Cubo(object):
 
 
 class partida(object):
-    def __init__(self,object,oponente=None,tiros=0,acertados=0,fallados=0,resultado=None,danio=0):
+    def __init__(self,oponente=None,tiros=0,acertados=0,fallados=0,resultado=None,danio=0):
         self.oponente=oponente
         self.tiros=tiros
         self.acertados=acertados
         self.fallados=fallados
         self.resultado=resultado
         self.danio=danio
+    def __str__(self):
+        if self.resultado == 0:
+            res = 'perdida'
+        else:
+            res = 'ganada'
+        cadena = str(self.oponente) + ' ' + str(self.tiros) + ' ' + res
+        return cadena
 
 class NodoAbb(object):
     def __init__(self,dato=None):
@@ -316,8 +320,8 @@ class MatrizDispersa(object):
             else:
                 terminado = True
         #print(matriz.source)
-        matriz.render(imagen,cleanup=True)
-        matriz.save(imagen,"C:\\Users\\Oscar\\Desktop")
+        matriz.render("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen,cleanup=True)
+        #matriz.save(imagen,"C:\\Users\\Abraham Jelkmann\\Desktop")
 
     def buscar(self,x,y):
         horizontal = False
@@ -380,7 +384,7 @@ class ListaDoble(object):
             graf.edge(str(nodo.derecha.dato),str(nodo.dato))
             nodo = nodo.derecha
         #graf.render('doble.gv',cleanup=True)
-        #graf.save('doble',"C:\\Users\\Oscar\\Desktop")
+        #graf.save('doble',"C:\\Users\\Abraham Jelkmann\\Desktop")
         return graf
 
 
@@ -462,17 +466,47 @@ class ArbolBinario(object):
         if raiz is None:
             return
         print (raiz.dato)
+        dot.node(str(raiz.dato))
+        #listas
         if (raiz.izquierda is not None):
-            dot.node(str(raiz.dato))
             dot.node(str(raiz.izquierda.dato))
             dot.edge(str(raiz.dato),str(raiz.izquierda.dato))
         if(raiz.derecha is not None):
-            dot.node(str(raiz.dato))
             dot.node(str(raiz.derecha.dato))
             dot.edge(str(raiz.dato),str(raiz.derecha.dato))
         contador+=1
         self.graficar(raiz.izquierda,contador,dot)
         self.graficar(raiz.derecha,contador,dot)
+        return dot
+    def graficarconlista(self,raiz,contador,dot):
+        if raiz is None:
+            return
+        print (str(raiz.dato) + ' arbolconlista')
+        dot.node(str(raiz.dato))
+        if raiz.dato.lista is not None:
+            li = raiz.dato.lista
+            if li.inicio is not None:
+                actual = li.inicio
+                while actual.derecha is not None:
+                    dot.node(str(actual.dato),shape='box')
+                    #print(nodo.dato)
+                    dot.node(str(actual.derecha.dato),shape='box')
+                    dot.body.append('\t\t{rank=same;"' + str(actual.dato) + '" -> "' + str(actual.derecha.dato) + '";}')
+                    dot.body.append('\t\t{rank=same;"' + str(actual.derecha.dato) + '" -> "' + str(actual.dato) + '";}')
+                    actual = actual.derecha
+                dot.body.append('\t\t{rank=same;"' + str(raiz.dato) + '" -> "' + str(li.inicio.dato) + '";}')
+        if (raiz.izquierda is not None):
+            #print (repr(raiz.izquierda.dato) + ' izquierda')
+                #dot.body.append('\t\t{rank=same;"' + str(nodo.arriba.dato) + '" -> "' + str(nodo.dato) + '";}')
+            dot.node(str(raiz.izquierda.dato))
+            dot.edge(str(raiz.dato),str(raiz.izquierda.dato))
+        if(raiz.derecha is not None):
+            #print (repr(raiz.derecha.dato) + ' izquierda')
+            dot.node(str(raiz.derecha.dato))
+            dot.edge(str(raiz.dato),str(raiz.derecha.dato))
+        contador+=1
+        self.graficarconlista(raiz.izquierda,contador,dot)
+        self.graficarconlista(raiz.derecha,contador,dot)
         return dot
 
 
@@ -652,7 +686,7 @@ def parametros():
 def registrar():
     nombre = str(request.form['nombre'])
     contra = str(request.form['contra'])
-    usuario = Usuario(nombre,contra,0)
+    usuario = Usuario(nombre.strip(),contra.strip(),0)
     ar.insertar(usuario)
     return "True"
 
@@ -663,6 +697,7 @@ def iniciar():
     dato = ar.buscar(ar.raiz,nombre)
     print(dato.contrasena)
     if dato is not None:
+        print(dato.contrasena.strip() + " = " + contra)
         if dato.contrasena == contra:
             return "True"
         else:
@@ -678,7 +713,7 @@ def cargar():
         nombre = str(request.form['nombre'])
         contra = str(request.form['contra'])
         conectado = str(request.form['conectado'])
-        u = Usuario(nombre,contra,int(conectado))
+        u = Usuario(nombre.strip(),contra.strip(),int(conectado))
         ar.insertar(u)
         print(nombre,contra,conectado)
         return "True"
@@ -727,6 +762,7 @@ def cargar():
         p = partida(oponente,int(tiros),int(acertados),int(fallados),int(ganada),int(danio))
         usuario = ar.buscar(ar.raiz,usuario)
         usuario.lista.insertar(p)
+        print('agregando partida a: ' + str(usuario))
         return 'partida agregada'
     elif tipo == 'juego':
         usuario1 = str(request.form['usuario1'])
@@ -760,32 +796,39 @@ def graf():
             us = ar.buscar(ar.raiz,nick)
             us.cubo.satelites.graficar(imagen)
             print('graficando satelites')
-            with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'barcos':
             us = ar.buscar(ar.raiz,nick)
             print('graficando barcos')
             us.cubo.barcos.graficar(imagen)
-            with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'aviones':
             us = ar.buscar(ar.raiz,nick)
             us.cubo.aviones.graficar(imagen)
             print('graficando aviones')
-            with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'submarinos':
             us = ar.buscar(ar.raiz,nick)
             us.cubo.submarinos.graficar(imagen)
             print('graficando submarinos')
-            with open("C:\\Users\\Oscar\\Desktop\\"+imagen+".png",'rb') as imageFile:
+            with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
     elif nombre == 'arbol':
-        dot = Digraph(comment='Prueba',format='png')
+        dot = Digraph(comment='Arbol',format='png')
         dot = ar.graficar(ar.raiz,0,dot)
-        dot.render('prueba',cleanup=True)
-        dot.save('prueba',r"C:\\Users\\Oscar\\Desktop")
-        with open("C:\\Users\\Oscar\\Desktop\\prueba.png",'rb') as imageFile:
+        dot.render("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen,cleanup=True)
+        dot.save(imagen,r"C:\\Users\\Abraham Jelkmann\\Desktop")
+        with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
+            cadena = base64.b64encode(imageFile.read())
+    elif nombre == 'arbolconlistas':
+        dot = Digraph(comment='arbolconlistas',format='png')
+        dot = ar.graficarconlista(ar.raiz,0,dot)
+        dot.render("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen,cleanup=True)
+        dot.save(imagen,r"C:\\Users\\Abraham Jelkmann\\Desktop")
+        with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
             cadena = base64.b64encode(imageFile.read())
     return cadena
 
@@ -804,7 +847,7 @@ lista.graficar()
 """
 
 """
-ar.insertar('Oscar')
+ar.insertar('Abraham Jelkmann')
 ar.insertar('Alejandro')
 ar.insertar('Alma')
 ar.insertar('Pablo')
@@ -812,12 +855,11 @@ ar.insertar('Pablo')
 
 sat = Satelite()
 bar = Barco(2,1)
-"""
+
 mat = MatrizDispersa()
 mat.insertar('A',2)
 mat.insertar('B',5)
 mat.insertar('C',8)
 sat.colocar(mat,'G',5)
 bar.colocar(mat,'H',10)
-mat.graficar()
-"""
+mat.graficar('asdf')

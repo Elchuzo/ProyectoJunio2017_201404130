@@ -186,7 +186,7 @@ public class Conexion {
         } catch (IOException e) {
             System.out.println(e);
         }
-        File outputfile = new File("C:\\Users\\Oscar\\Documents\\NetBeansProjects\\EstructurasJunio\\web\\"+imagen+".png");
+        File outputfile = new File("C:\\Users\\Abraham Jelkmann\\Desktop\\ProyectoJunio2017_201404130\\EstructurasJunio\\web\\"+imagen+".png");
         ImageIO.write(image, "png", outputfile);
         return imagen+".png";
     }
