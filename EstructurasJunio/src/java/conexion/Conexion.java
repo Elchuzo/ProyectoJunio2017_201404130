@@ -185,7 +185,8 @@ public class Conexion {
                 .build();
         String r = getString("disparar", formBody);
         return (r);
-    } 
+    }
+   
    
     public String graficar(String parametro,String nickname,String imagen) throws IOException{
         RequestBody formBody = new FormEncodingBuilder()
@@ -195,6 +196,26 @@ public class Conexion {
                 .build();
         String r = getString("graficar", formBody);        
         return decodeToImage(r,imagen);
+    }
+    
+    public String errores(String error) throws IOException{
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("error",error)
+                .build();
+        String r = getString("errores", formBody);
+        
+        return r;
+    }
+    
+    
+    public String tablero(String nivel,String nickname) throws IOException{
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("nivel",nivel)
+                .add("usuario",nickname)
+                .build();
+        String r = getString("tableros", formBody);
+        
+        return r;
     }
     
     public static String decodeToImage(String imageString,String imagen) throws IOException {

@@ -1,18 +1,21 @@
-<%-- 
-    Document   : tableros
-    Created on : 19/06/2017, 08:22:16 PM
-    Author     : Oscar
---%>
-
+<%@page import="java.io.StringReader"%>
+<%@page import="java.io.FileReader"%>
+<%@page import="java.nio.charset.StandardCharsets"%>
+<%@page import="java.io.ByteArrayInputStream"%>
+<%@page import="java.io.InputStream"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import = "conexion.Conexion"  %>
+<%@page import = "conexion.Conexion" %>
+<%@page import= "com.opencsv.*;"%>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Tableros</title>
         <%Conexion con = new Conexion();%>
-    <%String[] coordenadas = con.parametros().split(",");%>
+    <%String[] coordenadas = con.parametros().split(",");
+      CSVReader reader = null;
+      String[] nextLine = null;
+    %>
     </head>
     
     
@@ -40,6 +43,18 @@
     <br>
     <h3>Satelites</h3>
     <table border="1" cellpadding="8">
+        
+        <%
+            try{
+                 StringReader read = new StringReader(con.tablero("1", session.getAttribute("nickname").toString()));
+                 reader = new CSVReader(read);
+                 nextLine = reader.readNext();
+            }catch(Exception ex)
+            {
+            out.println(ex.toString());
+            }
+           %>
+           
     <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
     {  
         %>
@@ -47,7 +62,42 @@
          <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
     {  
         %>
-        <th></th>
+        <th> <%
+try{
+  //eliminar el ciclo, leer de forma más eficiente
+     //con.errores("entrando al ciclo");
+    // con.errores(String.valueOf(Integer.parseInt(nextLine[0])-1) + " = " + String);
+        
+           if(nextLine != null)
+{
+    //con.errores(nextLine[0] + " = " + b + nextLine[1]);
+    
+if(Integer.parseInt(nextLine[0])-1 == b && Integer.parseInt(nextLine[1])-1 == a)
+        {        
+           // con.errores(nextLine[2]);
+            if(Integer.parseInt(nextLine[2]) == 0)
+            {
+                %> o <%
+            }
+            else{
+                %> x <%
+            }
+nextLine = reader.readNext();
+        }
+
+}
+        
+
+}catch(Exception ex)
+{
+    
+out.println(ex.toString());
+System.out.println(ex.toString());
+con.errores(ex.toString());
+}
+       
+        %>
+        </th>
         <%
             }%>
     </tr>
@@ -57,17 +107,56 @@
     
         <br>
     <br>
-    
+    <% nextLine=null;%>
     <h3>Aviones</h3>
     <table border="1" cellpadding="8">
-    <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+        
+        <%
+            try{
+                 StringReader read = new StringReader(con.tablero("2", session.getAttribute("nickname").toString()));
+                 reader = new CSVReader(read);
+                 nextLine = reader.readNext();
+            }catch(Exception ex)
+            {
+            out.println(ex.toString());
+            }
+           %>
+    <% for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
     {  
         %>
     <tr>
-         <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+         <% for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
     {  
         %>
-        <th></th>
+        <th>
+            <%
+try{
+           if(nextLine != null)
+{   
+if(Integer.parseInt(nextLine[0])-1 == x && Integer.parseInt(nextLine[1])-1 == y)
+        {        
+            //con.errores(nextLine[2]);
+            if(Integer.parseInt(nextLine[2]) == 0)
+            {
+                %> o <%
+            }
+            else{
+                %> x <%
+            }
+nextLine = reader.readNext();
+        }
+
+}
+}catch(Exception ex)
+{
+    
+out.println(ex.toString());
+System.out.println(ex.toString());
+con.errores(ex.toString());
+}
+       
+        %>
+        </th>
         <%
             }%>
     </tr>
@@ -78,17 +167,56 @@
         <br>
     <br>
     
-    
+    <% nextLine=null;%>
     <h3>Barcos</h3>
     <table border="1" cellpadding="8">
-    <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+         <%
+            try{
+                 StringReader read = new StringReader(con.tablero("3", session.getAttribute("nickname").toString()));
+                 reader = new CSVReader(read);
+                 nextLine = reader.readNext();
+            }catch(Exception ex)
+            {
+            out.println(ex.toString());
+            }
+           %>
+    <% for(int j=0;j<Integer.parseInt(coordenadas[1]);j++)
     {  
         %>
     <tr>
-         <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+         <% for(int i=0;i<Integer.parseInt(coordenadas[0]);i++)
     {  
         %>
-        <th></th>
+        <th>
+            
+            <%
+try{
+           if(nextLine != null)
+{   
+if(Integer.parseInt(nextLine[0])-1 == i && Integer.parseInt(nextLine[1])-1 == j)
+        {        
+            //con.errores(nextLine[2]);
+            if(Integer.parseInt(nextLine[2]) == 0)
+            {
+                %> o <%
+            }
+            else{
+                %> x <%
+            }
+nextLine = reader.readNext();
+        }
+
+}
+}catch(Exception ex)
+{
+    
+out.println(ex.toString());
+System.out.println(ex.toString());
+con.errores(ex.toString());
+}
+       
+        %>
+        </th>
         <%
             }%>
     </tr>
@@ -99,17 +227,55 @@
         <br>
     <br>
     
-    
+    <% nextLine=null;%>
     <h3>Submarinos</h3>
     <table border="1" cellpadding="8">
-    <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+         <%
+            try{
+                 StringReader read = new StringReader(con.tablero("4", session.getAttribute("nickname").toString()));
+                 reader = new CSVReader(read);
+                 nextLine = reader.readNext();
+            }catch(Exception ex)
+            {
+            out.println(ex.toString());
+            }
+           %>
+    <% for(int yy=0;yy<Integer.parseInt(coordenadas[1]);yy++)
     {  
         %>
     <tr>
-         <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+         <% for(int xx=0;xx<Integer.parseInt(coordenadas[0]);xx++)
     {  
         %>
-        <th></th>
+        <th>
+            <%
+try{
+           if(nextLine != null)
+{   
+if(Integer.parseInt(nextLine[0])-1 == xx && Integer.parseInt(nextLine[1])-1 == yy)
+        {        
+            //con.errores(nextLine[2]);
+            if(Integer.parseInt(nextLine[2]) == 0)
+            {
+                %> o <%
+            }
+            else{
+                %> x <%
+            }
+nextLine = reader.readNext();
+        }
+
+}
+}catch(Exception ex)
+{
+    
+out.println(ex.toString());
+System.out.println(ex.toString());
+con.errores(ex.toString());
+}
+       
+        %>
+        </th>
         <%
             }%>
     </tr>
@@ -123,11 +289,11 @@
     <br>
         <h3>Satelites</h3>
     <table border="1" cellpadding="8">
-    <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+    <% for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
     {  
         %>
     <tr>
-         <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+         <% for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
     {  
         %>
         <th></th>
@@ -143,11 +309,11 @@
     
     <h3>Aviones</h3>
     <table border="1" cellpadding="8">
-    <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+    <% for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
     {  
         %>
     <tr>
-         <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+         <% for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
     {  
         %>
         <th></th>
@@ -164,11 +330,11 @@
     
     <h3>Barcos</h3>
     <table border="1" cellpadding="8">
-    <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+    <% for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
     {  
         %>
     <tr>
-         <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+         <% for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
     {  
         %>
         <th></th>
@@ -185,11 +351,11 @@
     
     <h3>Submarinos</h3>
     <table border="1" cellpadding="8">
-    <% for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+    <% for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
     {  
         %>
     <tr>
-         <% for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+         <% for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
     {  
         %>
         <th></th>

@@ -7,6 +7,10 @@ from threading import Timer
 import math
 app = Flask("Proyecto")
 
+def numval(letra):
+    numero = ord(letra.lower()) - 96
+    print(str(numero))
+    return str(numero)
 
 def sumar(x,y):
     c = ord(x.upper())
@@ -33,7 +37,15 @@ class juego(object):
         self.jugador2=None
         self.turno=None
         self.numerodisparos = 0
-
+    def cambiarturno(self):
+        if self.jugador1.upper() == self.turno.upper():
+            self.turno = self.jugador2
+            print('Turno de: ' + self.jugador2)
+        elif self.jugador2.upper() == self.turno.upper():
+            self.turno = self.jugador1
+            print('Turno de: ' + self.jugador1)
+        else:
+            print('Error')
 
 class Barco(object):
     def __init__(self,modo=None,direccion=None):
@@ -117,6 +129,7 @@ class Usuario(object):
         self.cubo = Cubo()
         self.acertados = Cubo()
         self.fallados = Cubo()
+        self.ganadas = 0
     def __lt__(self,other):
         return (self.nombre.upper() < other.nombre.upper())
     def __eq__(self,other):
@@ -333,7 +346,7 @@ class MatrizDispersa(object):
         actual = self.cabeza
         if self.cabeza is not None:
             while actual.derecha is not None:
-                print(actual.derecha.x + " = " + x)
+                #print(actual.derecha.x + " = " + x)
                 if actual.derecha.x == x:
                     actual = actual.derecha
                     horizontal = True
@@ -358,6 +371,42 @@ class MatrizDispersa(object):
         else:
             return None
 
+    def recorrer(self):
+        cadena = ''
+        actual = self.cabeza
+        if self.cabeza is not None:
+            while actual.derecha is not None:
+                actual = actual.derecha
+                #print('la cabeza no esta vacia')
+                if actual.abajo is not None:
+                    #print('hay nodos abajo')
+                    aux = actual
+                    while aux.abajo is not None:
+                        if aux.abajo.hundido:
+                            hu = '1'
+                        else:
+                            hu = '0'
+                        cadena = cadena + numval(aux.abajo.x) + ',' + str(aux.abajo.y) + ',' + hu + "\n"
+                        aux = aux.abajo
+        print ('recorrido matriz: ' + cadena)
+        return cadena
+    def recorreref(self):
+        cadena = ''
+        actual = self.cabeza
+        if self.cabeza is not None:
+            while actual.abajo is not None:
+                actual = actual.abajo
+                if actual.derecha is not None:
+                    aux = actual
+                    while aux.derecha is not None:
+                        if aux.derecha.hundido:
+                            hu='1'
+                        else:
+                            hu='0'
+                        cadena = cadena + numval(aux.derecha.x) + ',' + str(aux.derecha.y) + ',' + hu + "\n"
+                        aux = aux.derecha
+        print('recorrido en y: ' + cadena)
+        return cadena
 
 class NodoDoble(object):
     def __init__(self,dato=None):
@@ -551,8 +600,22 @@ class Disparo(object):
 tem = Tempo()
 
 ar = ArbolBinario()
-
+disparos = ListaDoble()
 juegoactual = juego()
+
+def contar(tiempo):
+    #tiempo = str(request.form['tiempo'])
+    tem.inicio = time.time()
+    tem.final = time.time() + int(tiempo)
+    return 'iniciado'
+
+def disparo(x,y,tipo,resultado,emisor,receptor,fecha,tiempo=0):
+    if juegoactual.variante == 2:
+        if juegoactual.numerodisparos == 0:
+            contar(juegoactual.tiempo)
+    juegoactual.numerodisparos += 1
+    dis = Disparo(x,y,tipo,resultado,emisor,receptor,fecha,numero,tiempo)
+    disparos.insertar(dis)
 
 @app.route('/disparar',methods=['POST'])
 def disparar():
@@ -580,6 +643,7 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             us.acertados.satelites.insertar(posx,int(posy))
+                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                             nod.hundido = True
                             return 'exito'
                         else:
@@ -687,14 +751,6 @@ def disparar():
     else:
         return'error'
 
-@app.route('/contar',methods=['POST'])
-def contar():
-    tiempo = str(request.form['tiempo'])
-    tem.inicio = time.time()
-    tem.final = time.time() + int(tiempo)
-    inicio = time.time()
-    fin = inicio + int(tiempo)
-    return 'iniciado'
 
 @app.route('/revisar',methods=['POST'])
 def revisar():
@@ -710,6 +766,23 @@ def parametros():
     y = juegoactual.y
     cadena = str(x) + "," + str(y)
     return (cadena)
+
+@app.route('/tableros',methods=['POST'])
+def tableros():
+    nivel = str(request.form['nivel'])
+    jugador = str(request.form['usuario'])
+    u = ar.buscar(ar.raiz,jugador)
+    if u is not None:
+        if nivel == '1':
+            return u.cubo.satelites.recorreref()
+        elif nivel == '2':
+            return u.cubo.aviones.recorreref()
+        elif nivel == '3':
+            return u.cubo.barcos.recorreref()
+        elif nivel == '4':
+            return u.cubo.submarinos.recorreref()
+    else:
+        return 'Error'
 
 @app.route('/registrar',methods=['POST'])
 def registrar():
@@ -816,6 +889,11 @@ def cargar():
 
 @app.route('/jugar',methods=['POST'])
 
+@app.route('/errores',methods=['POST'])
+def errores():
+    error = str(request.form['error'])
+    print(error)
+    return 'impre'
 
 @app.route('/graficar',methods=['POST'])
 def graf():
@@ -890,7 +968,15 @@ bar = Barco(2,1)
 mat = MatrizDispersa()
 mat.insertar('A',2)
 mat.insertar('B',5)
+mat.insertar('A',10)
+mat.insertar('A',5)
+mat.insertar('C',7)
+mat.insertar('G',15)
 mat.insertar('C',8)
 sat.colocar(mat,'G',5)
 bar.colocar(mat,'H',10)
+mat.recorreref()
+mat.recorrer()
 mat.graficar('asdf')
+numval('a')
+numval('B')
