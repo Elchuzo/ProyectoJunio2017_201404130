@@ -3,8 +3,9 @@ package org.apache.jsp;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.jsp.*;
+import conexion.Conexion;
 
-public final class carga_jsp extends org.apache.jasper.runtime.HttpJspBase
+public final class reportes_jsp extends org.apache.jasper.runtime.HttpJspBase
     implements org.apache.jasper.runtime.JspSourceDependent {
 
   private static final JspFactory _jspxFactory = JspFactory.getDefaultFactory();
@@ -43,12 +44,14 @@ public final class carga_jsp extends org.apache.jasper.runtime.HttpJspBase
 
       out.write("\n");
       out.write("\n");
-      out.write("\n");
       out.write("<!DOCTYPE html>\n");
+Conexion con = new Conexion();
+      out.write("\n");
       out.write("<html>\n");
-      out.write("   <head>\n");
-      out.write("      <title>Cargar Archivos</title>\n");
-      out.write("      <meta charset=\"utf-8\">\n");
+      out.write("    <head>\n");
+      out.write("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
+      out.write("        <title>Reportes</title>\n");
+      out.write("        <meta charset=\"utf-8\">\n");
       out.write("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n");
       out.write("  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\">\n");
       out.write("  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js\"></script>\n");
@@ -71,47 +74,32 @@ public final class carga_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("    </ul>\n");
       out.write("  </div>\n");
       out.write("</nav>\n");
-      out.write("       \n");
-      out.write("      <h1>Cargar</h1>\n");
-      out.write("      <br/>\n");
-      out.write("      <h3>Usuarios: </h3>\n");
-      out.write("      <form action = \"file.jsp\" method = \"post\"\n");
-      out.write("         enctype = \"multipart/form-data\">\n");
-      out.write("         <input type = \"file\" name = \"usuarios\" size = \"50\" />\n");
-      out.write("         <br />\n");
-      out.write("         <br />\n");
-      out.write("         <input type = \"submit\" value = \"Cargar\" />\n");
-      out.write("      </form>\n");
-      out.write("      <h3>Naves: </h3>\n");
-      out.write("      <form action = \"file.jsp\" method = \"post\"\n");
-      out.write("         enctype = \"multipart/form-data\">\n");
-      out.write("         <input type = \"file\" name = \"naves\" size = \"50\" />\n");
-      out.write("         <br />\n");
-      out.write("         <br />\n");
-      out.write("         <input type = \"submit\" value = \"Cargar\" />\n");
-      out.write("      </form>\n");
-      out.write("      <h3>Partidas: </h3>\n");
-      out.write("      <form action = \"file.jsp\" method = \"post\"\n");
-      out.write("         enctype = \"multipart/form-data\">\n");
-      out.write("         <input type = \"file\" name = \"partidas\" size = \"50\" />\n");
-      out.write("         <br />\n");
-      out.write("         <br />\n");
-      out.write("         <input type = \"submit\" value = \"Cargar\" />\n");
-      out.write("      </form>\n");
-      out.write("      <h3>Juego Actual: </h3>\n");
-      out.write("      <form action = \"file.jsp\" method = \"post\"\n");
-      out.write("         enctype = \"multipart/form-data\">\n");
-      out.write("         <input type = \"file\" name = \"juego\" size = \"50\" />\n");
-      out.write("         <br />\n");
-      out.write("         <br />\n");
-      out.write("         <input type = \"submit\" value = \"Cargar\" />\n");
-      out.write("      </form>\n");
-      out.write("      \n");
-      out.write("      \n");
-      out.write("      \n");
-      out.write("   </body>\n");
-      out.write("   \n");
-      out.write("</html>");
+      out.write("    </head>\n");
+      out.write("    <body>\n");
+      out.write("        \n");
+      out.write("        <h2>arbol</h2>\n");
+      out.write("        ");
+
+            
+        out.println("<img src=\"" + con.graficar("arbol",session.getAttribute("nickname").toString(),"arbol") + "\">");
+           
+        
+      out.write("\n");
+      out.write("        \n");
+      out.write("        <br>\n");
+      out.write("        <br>\n");
+      out.write("        <br>\n");
+      out.write("        <h2>arbol con listas</h2>\n");
+      out.write("        ");
+
+            
+        out.println("<img src=\"" + con.graficar("arbolconlistas",session.getAttribute("nickname").toString(),"arbolconlistas") + "\">");
+           
+        
+      out.write("\n");
+      out.write("        \n");
+      out.write("    </body>\n");
+      out.write("</html>\n");
     } catch (Throwable t) {
       if (!(t instanceof SkipPageException)){
         out = _jspx_out;

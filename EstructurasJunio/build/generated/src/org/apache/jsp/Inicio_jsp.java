@@ -47,6 +47,7 @@ public final class Inicio_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("<html>\n");
       out.write("    <head>\n");
       out.write("<meta charset=\"utf-8\">\n");
+      out.write("\n");
       out.write("    <title>Iniciar Sesión</title>\n");
       out.write("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
       out.write("    <meta name=\"generator\" content=\"Codeply\">\n");

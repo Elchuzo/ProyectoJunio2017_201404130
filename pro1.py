@@ -10,7 +10,7 @@ app = Flask("Proyecto")
 
 def numval(letra):
     numero = ord(letra.lower()) - 96
-    print(str(numero))
+    #print(str(numero))
     return str(numero)
 
 def sumar(x,y):
@@ -390,7 +390,7 @@ class MatrizDispersa(object):
                             hu = '0'
                         cadena = cadena + numval(aux.abajo.x) + ',' + str(aux.abajo.y) + ',' + hu + "\n"
                         aux = aux.abajo
-        print ('recorrido matriz: ' + cadena)
+        #print ('recorrido matriz: ' + cadena)
         return cadena
     def recorreref(self):
         cadena = ''
@@ -407,7 +407,7 @@ class MatrizDispersa(object):
                             hu='0'
                         cadena = cadena + numval(aux.derecha.x) + ',' + str(aux.derecha.y) + ',' + hu + "\n"
                         aux = aux.derecha
-        print('recorrido en y: ' + cadena)
+        #print('recorrido en y: ' + cadena)
         return cadena
 
 class NodoDoble(object):
@@ -430,7 +430,7 @@ class ListaDoble(object):
         nodo = self.inicio
         while nodo.derecha is not None:
             graf.node(str(nodo.dato))
-            print(nodo.dato)
+            #print(nodo.dato)
             graf.node(str(nodo.derecha.dato))
             graf.edge(str(nodo.dato),str(nodo.derecha.dato))
             graf.edge(str(nodo.derecha.dato),str(nodo.dato))
@@ -474,7 +474,7 @@ class ArbolBinario(object):
             return None
         else:
             if valor.upper() == raiz.dato.nombre.upper():
-                print(str(raiz.dato) + ' existe')
+                #print(str(raiz.dato) + ' existe')
                 return raiz.dato
             elif valor.upper() < raiz.dato.nombre.upper():
                 return self.buscar(raiz.izquierda,valor)
@@ -517,7 +517,7 @@ class ArbolBinario(object):
     def graficar(self,raiz,contador,dot):
         if raiz is None:
             return
-        print (raiz.dato)
+        #print (raiz.dato)
         dot.node(str(raiz.dato))
         #listas
         if (raiz.izquierda is not None):
@@ -629,9 +629,10 @@ def disparo(x,y,nivel,tipo,resultado,emisor,receptor,fecha,tiempo=0):
 def disparar():
     if juegoactual.disparos > 0:
         if revisarsegundos() > 0:
-            pass
+            print("Juego en curso")
         else:
-            print("el juego ha acabado")
+            print("El juego ha acabado")
+            return('El juego ha acabado')
     jugador = str(request.form['jugador'])
     nivel = str(request.form['nivel'])
     posx = str(request.form['posx'])
@@ -712,7 +713,7 @@ def disparar():
                             return 'nodo ya hundido'
                     else:
                         disparo(posx,int(posy),juegoactual.tipo_disparo,0,4,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
-                        us.fallados.subamrinos.insertar(posx,int(posy))
+                        us.fallados.submarinos.insertar(posx,int(posy))
                         juegoactual.cambiarturno()
                         return 'fallo'
                 else:
@@ -865,6 +866,7 @@ def cargar():
         ar.insertar(u)
         print(nombre,contra,conectado)
         return "True"
+
     elif tipo == 'naves':
         jugador = str(request.form['jugador'])
         columna = str(request.form['columna'])
@@ -912,6 +914,7 @@ def cargar():
         usuario.lista.insertar(p)
         print('agregando partida a: ' + str(usuario))
         return 'partida agregada'
+
     elif tipo == 'juego':
         usuario1 = str(request.form['usuario1'])
         usuario2 = str(request.form['usuario2'])
