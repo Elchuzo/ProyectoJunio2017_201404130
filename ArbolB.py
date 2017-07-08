@@ -1,3 +1,21 @@
+from graphviz import Digraph
+
+#clase para pruebas
+class Dato(object):
+    def __init__(self,numero,x):
+        self.x=x
+        self.numero=numero
+    def __str__(self):
+        a = '  x:  ' + str(self.x)
+        b = '  n:  ' + str(self.numero)
+        cadena = a + " \n " + b
+        return cadena
+    def __eq__(self,other):
+        return (self.x == other.x)
+    def __lt__(self,other):
+        return(self.x < other.x)
+    def __gt__(self,other):
+        return(self.x > other.x)
 
 class ArbolB(object):
     def __init__(self):
@@ -114,31 +132,85 @@ class ArbolB(object):
                 vizquierda.padre = padre.p0
                 vderecha.padre = padre.p0
 
-    def recorrer(self,raiz):
+    def recorrer(self,raiz,dot,contador):
         raiz.imprimir()
 
-        #if raiz.padre is not None:
+        if raiz.cantidad_datos() == 1:
+            dot.body.append('node'+str(contador)+'[label = "<f0>|'+str(raiz.p0.dato)+'|<f1>"];')
+        elif raiz.cantidad_datos() == 2:
+            dot.body.append('node'+str(contador)+'[label = "<f0> |' + str(raiz.p0.dato) + '|<f1> |' + str(raiz.p1.dato) + '|<f2>"];')
+        elif raiz.cantidad_datos() == 3:
+            dot.body.append('node'+str(contador)+'[label = "<f0> |' + str(raiz.p0.dato) + '|<f1> |' + str(raiz.p1.dato) + '|<f2> |' + str(raiz.p2.dato) + '|<f3>"];')
+        elif raiz.cantidad_datos() == 4:
+            dot.body.append('node'+str(contador)+'[label = "<f0> |' + str(raiz.p0.dato) + '|<f1> |' + str(raiz.p1.dato) + '|<f2> |' + str(raiz.p2.dato) + '|<f3>|' + str(raiz.p3.dato) + '|<f4>"];')
+        #print(str(contador))
+        contador+=1
+        #if raiz.padre is not None: # Pruebas para verificar que el padre es el correcto
             #print('padre: ')
             #raiz.padre.vector.imprimir()
         if raiz.tiene_hijos():
             if raiz.cantidad_datos() == 1:
-                self.recorrer(raiz.p0.izquierda)
-                self.recorrer(raiz.p0.derecha)
+
+                n=self.recorrer(raiz.p0.izquierda,dot,contador)
+                #print(n)
+                dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
+                self.recorrer(raiz.p0.derecha,dot,n)
+                #print(contador)
+                dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n)+'"')
+
             elif raiz.cantidad_datos() == 2:
-                self.recorrer(raiz.p0.izquierda)
-                self.recorrer(raiz.p0.derecha)
-                self.recorrer(raiz.p1.derecha)
+                print(contador)
+                if contador == 1: # reorganizar los parametros para que la raiz no se arruine
+                    n=self.recorrer(raiz.p0.izquierda,dot,contador)
+                    dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
+                    m=self.recorrer(raiz.p0.derecha,dot,n)
+                    dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n)+'"')
+                    self.recorrer(raiz.p1.derecha,dot,m)
+                    dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(m)+'"')
+                else:
+                    n=self.recorrer(raiz.p0.izquierda,dot,contador)
+                    dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
+                    n=self.recorrer(raiz.p0.derecha,dot,n)
+                    dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n-1)+'"')
+                    n=self.recorrer(raiz.p1.derecha,dot,n)
+                    dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(n-1)+'"')
+
             elif raiz.cantidad_datos() == 3:
-                self.recorrer(raiz.p0.izquierda)
-                self.recorrer(raiz.p0.derecha)
-                self.recorrer(raiz.p1.derecha)
-                self.recorrer(raiz.p2.derecha)
+                n=self.recorrer(raiz.p0.izquierda,dot,contador)
+                dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
+                n=self.recorrer(raiz.p0.derecha,dot,n)
+                dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n-1)+'"')
+                n=self.recorrer(raiz.p1.derecha,dot,n)
+                dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(n-1)+'"')
+                n=self.recorrer(raiz.p2.derecha,dot,n)
+                dot.body.append('"node'+str(contador-1)+'":f3 -> "node'+str(n-1)+'"')
             elif raiz.cantidad_datos() == 4:
-                self.recorrer(raiz.p0.izquierda)
-                self.recorrer(raiz.p0.derecha)
-                self.recorrer(raiz.p1.derecha)
-                self.recorrer(raiz.p2.derecha)
-                self.recorrer(raiz.p3.derecha)
+                n=self.recorrer(raiz.p0.izquierda,dot,contador)
+                dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
+                n=self.recorrer(raiz.p0.derecha,dot,n)
+                dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n-1)+'"')
+                n=self.recorrer(raiz.p1.derecha,dot,n)
+                dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(n-1)+'"')
+                n=self.recorrer(raiz.p2.derecha,dot,n)
+                dot.body.append('"node'+str(contador-1)+'":f3 -> "node'+str(n-1)+'"')
+                n=self.recorrer(raiz.p3.derecha,dot,n)
+                dot.body.append('"node'+str(contador-1)+'":f4 -> "node'+str(n-1)+'"')
+            return n
+        else:
+            return contador
+
+    def buscar(self):
+        pass #implementar busqueda
+
+    def eliminar(self):
+        pass # (algún día)
+
+    def graf(self,imagen):
+        dot = Digraph(comment='ArbolB',format='png')
+        dot.body.append('node [shape = record,height=.1];')
+        self.recorrer(self.raiz,dot,0)
+        dot.render("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen,cleanup=True)
+        dot.save(imagen,r"C:\\Users\\Abraham Jelkmann\\Desktop")
 
 
 class VectorB(object):
@@ -313,8 +385,9 @@ prueba.imprimir()
 prueba.buscar(15)
 """
 
-""" # pruebas arbol B
+# pruebas arbol B
 arbol = ArbolB()
+
 arbol.insertar(arbol.raiz,50)
 arbol.insertar(arbol.raiz,5)
 arbol.insertar(arbol.raiz,32)
@@ -326,6 +399,8 @@ arbol.insertar(arbol.raiz,45)
 arbol.insertar(arbol.raiz,8)
 arbol.insertar(arbol.raiz,4)
 arbol.insertar(arbol.raiz,15)
+
+
 arbol.insertar(arbol.raiz,46)
 arbol.insertar(arbol.raiz,47)
 arbol.insertar(arbol.raiz,22)
@@ -333,8 +408,12 @@ arbol.insertar(arbol.raiz,17)
 arbol.insertar(arbol.raiz,66)
 arbol.insertar(arbol.raiz,70)
 arbol.insertar(arbol.raiz,80)
+
 arbol.insertar(arbol.raiz,7)
 arbol.insertar(arbol.raiz,6)
+
+
+
 arbol.insertar(arbol.raiz,30)
 arbol.insertar(arbol.raiz,27)
 arbol.insertar(arbol.raiz,26)
@@ -342,5 +421,16 @@ arbol.insertar(arbol.raiz,11)
 arbol.insertar(arbol.raiz,12)
 arbol.insertar(arbol.raiz,13)
 
-arbol.recorrer(arbol.raiz)
 """
+arbol.insertar(arbol.raiz,Dato(1,5))
+arbol.insertar(arbol.raiz,Dato(2,25))
+arbol.insertar(arbol.raiz,Dato(3,6))
+arbol.insertar(arbol.raiz,Dato(4,15))
+arbol.insertar(arbol.raiz,Dato(5,31))
+arbol.insertar(arbol.raiz,Dato(6,15))
+arbol.insertar(arbol.raiz,Dato(7,12))
+arbol.insertar(arbol.raiz,Dato(8,44))
+arbol.insertar(arbol.raiz,Dato(9,9))
+"""
+#arbol.recorrer(arbol.raiz)
+arbol.graf('arbol')

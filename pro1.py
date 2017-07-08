@@ -1053,13 +1053,6 @@ def graf():
 if __name__ == "__main__":
   app.run(debug=True, host='0.0.0.0')
 
-"""
-lista = ListaDoble()
-lista.insertar(5)
-lista.insertar(10)
-lista.insertar(8)
-lista.graficar()
-"""
 
 """
 ar.insertar('Abraham Jelkmann')
