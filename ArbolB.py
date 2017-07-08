@@ -96,6 +96,16 @@ class ArbolB(object):
                 vderecha.p1.setIzquierda(padre.p4.izquierda)
                 vderecha.p1.setDerecha(padre.p4.derecha)
 
+                padre.p0.izquierda.padre = vizquierda.p0
+                padre.p1.izquierda.padre = vizquierda.p1
+                padre.p2.izquierda.padre = vizquierda.p1
+
+                padre.p3.izquierda.padre = vderecha.p0
+                padre.p4.izquierda.padre = vderecha.p1
+                padre.p4.derecha.padre = vderecha.p1
+
+                #asignar de nuevo los padres de los hijos de los nuevos vectores creados (vizquierda y vderecha)
+
                 padre.cambiar(vraiz)
 
                 padre.p0.setIzquierda(vizquierda)
@@ -104,7 +114,35 @@ class ArbolB(object):
                 vizquierda.padre = padre.p0
                 vderecha.padre = padre.p0
 
+    def recorrer(self,raiz):
+        raiz.imprimir()
+
+        #if raiz.padre is not None:
+            #print('padre: ')
+            #raiz.padre.vector.imprimir()
+        if raiz.tiene_hijos():
+            if raiz.cantidad_datos() == 1:
+                self.recorrer(raiz.p0.izquierda)
+                self.recorrer(raiz.p0.derecha)
+            elif raiz.cantidad_datos() == 2:
+                self.recorrer(raiz.p0.izquierda)
+                self.recorrer(raiz.p0.derecha)
+                self.recorrer(raiz.p1.derecha)
+            elif raiz.cantidad_datos() == 3:
+                self.recorrer(raiz.p0.izquierda)
+                self.recorrer(raiz.p0.derecha)
+                self.recorrer(raiz.p1.derecha)
+                self.recorrer(raiz.p2.derecha)
+            elif raiz.cantidad_datos() == 4:
+                self.recorrer(raiz.p0.izquierda)
+                self.recorrer(raiz.p0.derecha)
+                self.recorrer(raiz.p1.derecha)
+                self.recorrer(raiz.p2.derecha)
+                self.recorrer(raiz.p3.derecha)
+
+
 class VectorB(object):
+
     def __init__(self,size=4):
         self.size = size
         #Definir todos los nodos del vector al ser iniciado
@@ -144,7 +182,8 @@ class VectorB(object):
                         actual.siguiente.dato = dato
                         insertado = True
                         #return print((str(dato) + ' ha sido ingresado'))
-#que no quede huella que no y que no
+
+    #que no quede huella que no y que no
 
     def corrernodos(self,actual=None): #Metodo para desplazar los nodos
         final = self.p4
@@ -273,13 +312,13 @@ prueba.insertar(30)
 prueba.imprimir()
 prueba.buscar(15)
 """
+
+""" # pruebas arbol B
 arbol = ArbolB()
 arbol.insertar(arbol.raiz,50)
 arbol.insertar(arbol.raiz,5)
 arbol.insertar(arbol.raiz,32)
 arbol.insertar(arbol.raiz,10)
-
-
 arbol.insertar(arbol.raiz,33)
 arbol.insertar(arbol.raiz,3)
 arbol.insertar(arbol.raiz,25)
@@ -294,13 +333,14 @@ arbol.insertar(arbol.raiz,17)
 arbol.insertar(arbol.raiz,66)
 arbol.insertar(arbol.raiz,70)
 arbol.insertar(arbol.raiz,80)
+arbol.insertar(arbol.raiz,7)
+arbol.insertar(arbol.raiz,6)
+arbol.insertar(arbol.raiz,30)
+arbol.insertar(arbol.raiz,27)
+arbol.insertar(arbol.raiz,26)
+arbol.insertar(arbol.raiz,11)
+arbol.insertar(arbol.raiz,12)
+arbol.insertar(arbol.raiz,13)
 
-"""
-arbol.raiz.imprimir()
-arbol.raiz.p0.izquierda.imprimir()
-arbol.raiz.p0.derecha.imprimir()
-
-arbol.raiz.p1.derecha.imprimir()
-arbol.raiz.p2.derecha.imprimir()
-arbol.raiz.p3.derecha.imprimir()
+arbol.recorrer(arbol.raiz)
 """
