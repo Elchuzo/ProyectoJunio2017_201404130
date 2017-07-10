@@ -13,9 +13,15 @@ class Dato(object):
     def __eq__(self,other):
         return (self.x == other.x)
     def __lt__(self,other):
-        return(self.x < other.x)
+        if self.x != other.x:
+            return self.x < other.x
+        else:
+            return self.numero < other.numero
     def __gt__(self,other):
-        return(self.x > other.x)
+        if self.x != other.x:
+            return self.x > other.x
+        else:
+            return self.numero > other.numero
 
 class ArbolB(object):
     def __init__(self):
@@ -33,6 +39,9 @@ class ArbolB(object):
                 self.insertar(actual.derecha,dato)
             pass
         else:
+            #if dato == 24:
+            #    raiz.imprimir()
+            #    raiz.padre.vector.imprimir()
             raiz.insertar(dato)
             if raiz.cantidad_datos() == 5: # El vector ya está lleno, se debe separar
                 if raiz.padre is not None: # Si tiene padre, se debe insertar el valor medio al padre
@@ -61,11 +70,17 @@ class ArbolB(object):
                     #raiz.imprimir()
                     #vizquierda.imprimir()
                     #vderecha.imprimir()
-                    print("La raiz se ha separado") # raiz es un VectorB
+                    #print("La raiz se ha separado") # raiz es un VectorB
 
     def insertararriba(self,raiz,padre,dato): # raiz es un VectorB
 
         padre.insertar(dato) # Agregar el dato al padre
+
+        #print('hola')
+        #raiz.imprimir()
+        #padre.imprimir()
+        #if padre.padre is not None:
+        #    padre.padre.vector.imprimir()
 
         vizquierda = VectorB() # Crear el vector que será agregado a la izquierda del dato ingresado al padre
         vizquierda.insertar(raiz.p0.dato)
@@ -74,7 +89,8 @@ class ArbolB(object):
         vderecha = VectorB() # Crear el vector que será agregado a la derecha del dato ingresado al padre
         vderecha.insertar(raiz.p3.dato)
         vderecha.insertar(raiz.p4.dato)
-
+            #metodos incorrectos? -> vizquierda.p0.setIzquierda(raiz.p0.izquierda) ...
+            #casos en los que tienen hijos?
         vizquierda.p0.setIzquierda(raiz.p0.izquierda)
         vizquierda.p1.setIzquierda(raiz.p1.izquierda)
         vizquierda.p1.setDerecha(raiz.p1.derecha)
@@ -82,8 +98,18 @@ class ArbolB(object):
         vderecha.p0.setIzquierda(raiz.p3.izquierda)
         vderecha.p1.setIzquierda(raiz.p4.izquierda)
         vderecha.p1.setDerecha(raiz.p4.derecha)
-
+        #print('')
+        #print('vectores:')
+        #vderecha.imprimir()
+        #vizquierda.imprimir()
+        #print('aca el padre')
+        #padre.imprimir()
+        #print('dato buscado')
+        #print(dato)
         nod = padre.buscar(dato) # nod es el nodo que contiene el dato que ingresamos al inicio al padre
+        #if dato == 22:
+        #    print('aca esta nod')
+        #    nod.vector.imprimir()
 
         nod.setIzquierda(vizquierda) # Asignar hijos al dato ingresado
         nod.setDerecha(vderecha)
@@ -94,6 +120,23 @@ class ArbolB(object):
         if padre.cantidad_datos() == 5:
             if padre.padre is not None:
                 self.insertararriba(padre,padre.padre.vector,padre.p2.dato)
+                #print('p')
+                #padre.imprimir()
+                #padre.padre.vector.p0.izquierda.imprimir()
+                #padre.p0.izquierda.imprimir()
+                #print(padre.p2.dato)
+                nodo = padre.padre.vector.buscar(padre.p2.dato) # Este es el nodo que tiene los nietos a los cuales hay que actualizar las referencias hacia los padres
+                #print(nodo.dato)
+
+                padre.p0.izquierda.padre = nodo.izquierda.p0
+                padre.p0.derecha.padre = nodo.izquierda.p0
+                padre.p1.derecha.padre = nodo.izquierda.p1
+
+                padre.p3.izquierda.padre = nodo.derecha.p0
+                padre.p3.derecha.padre = nodo.derecha.p0
+                padre.p4.derecha.padre = nodo.derecha.p1
+
+                #actualizar referencias hacia los padres de los hijos?
             else:
                 vraiz = VectorB()
                 vraiz.insertar(padre.p2.dato)
@@ -114,6 +157,8 @@ class ArbolB(object):
                 vderecha.p1.setIzquierda(padre.p4.izquierda)
                 vderecha.p1.setDerecha(padre.p4.derecha)
 
+                #revisar bien estos metodos
+
                 padre.p0.izquierda.padre = vizquierda.p0
                 padre.p1.izquierda.padre = vizquierda.p1
                 padre.p2.izquierda.padre = vizquierda.p1
@@ -123,9 +168,10 @@ class ArbolB(object):
                 padre.p4.derecha.padre = vderecha.p1
 
                 #asignar de nuevo los padres de los hijos de los nuevos vectores creados (vizquierda y vderecha)
-
-                padre.cambiar(vraiz)
-
+                #print('linea especial')
+                #padre.imprimir()
+                padre.cambiar(vraiz) #atención a esta línea
+                #padre.imprimir()
                 padre.p0.setIzquierda(vizquierda)
                 padre.p0.setDerecha(vderecha)
 
@@ -133,8 +179,12 @@ class ArbolB(object):
                 vderecha.padre = padre.p0
 
     def recorrer(self,raiz,dot,contador):
-        raiz.imprimir()
-
+        #print('vector: ')
+        #raiz.imprimir()
+        #if raiz.padre is not None:
+        #    print('padre: ')
+        #    raiz.padre.vector.imprimir()
+        #    print('')
         if raiz.cantidad_datos() == 1:
             dot.body.append('node'+str(contador)+'[label = "<f0>|'+str(raiz.p0.dato)+'|<f1>"];')
         elif raiz.cantidad_datos() == 2:
@@ -159,7 +209,7 @@ class ArbolB(object):
                 dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n)+'"')
 
             elif raiz.cantidad_datos() == 2:
-                print(contador)
+                #print(contador)
                 if contador == 1: # reorganizar los parametros para que la raiz no se arruine
                     n=self.recorrer(raiz.p0.izquierda,dot,contador)
                     dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
@@ -176,14 +226,24 @@ class ArbolB(object):
                     dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(n-1)+'"')
 
             elif raiz.cantidad_datos() == 3:
-                n=self.recorrer(raiz.p0.izquierda,dot,contador)
-                dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
-                n=self.recorrer(raiz.p0.derecha,dot,n)
-                dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n-1)+'"')
-                n=self.recorrer(raiz.p1.derecha,dot,n)
-                dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(n-1)+'"')
-                n=self.recorrer(raiz.p2.derecha,dot,n)
-                dot.body.append('"node'+str(contador-1)+'":f3 -> "node'+str(n-1)+'"')
+                if contador == 1:
+                    n=self.recorrer(raiz.p0.izquierda,dot,contador)
+                    dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
+                    m=self.recorrer(raiz.p0.derecha,dot,n)
+                    dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n)+'"')
+                    o=self.recorrer(raiz.p1.derecha,dot,m)
+                    dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(m)+'"')
+                    p=self.recorrer(raiz.p2.derecha,dot,o)
+                    dot.body.append('"node'+str(contador-1)+'":f3 -> "node'+str(o)+'"')
+                else:
+                    n=self.recorrer(raiz.p0.izquierda,dot,contador)
+                    dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
+                    n=self.recorrer(raiz.p0.derecha,dot,n)
+                    dot.body.append('"node'+str(contador-1)+'":f1 -> "node'+str(n-1)+'"')
+                    n=self.recorrer(raiz.p1.derecha,dot,n)
+                    dot.body.append('"node'+str(contador-1)+'":f2 -> "node'+str(n-1)+'"')
+                    n=self.recorrer(raiz.p2.derecha,dot,n)
+                    dot.body.append('"node'+str(contador-1)+'":f3 -> "node'+str(n-1)+'"')
             elif raiz.cantidad_datos() == 4:
                 n=self.recorrer(raiz.p0.izquierda,dot,contador)
                 dot.body.append('"node'+str(contador-1)+'":f0 -> "node'+str(contador)+'"')
@@ -321,7 +381,7 @@ class VectorB(object):
             cadena = cadena + " | " + str(actual.dato)
             if actual.siguiente is None:
                 break
-        print('el vector es: ' + cadena + ' |')
+        print(cadena + ' |')
 
     def tiene_hijos(self):
         if self.p0.izquierda is not None or self.p0.derecha is not None:
@@ -399,8 +459,6 @@ arbol.insertar(arbol.raiz,45)
 arbol.insertar(arbol.raiz,8)
 arbol.insertar(arbol.raiz,4)
 arbol.insertar(arbol.raiz,15)
-
-
 arbol.insertar(arbol.raiz,46)
 arbol.insertar(arbol.raiz,47)
 arbol.insertar(arbol.raiz,22)
@@ -412,14 +470,24 @@ arbol.insertar(arbol.raiz,80)
 arbol.insertar(arbol.raiz,7)
 arbol.insertar(arbol.raiz,6)
 
-
-
 arbol.insertar(arbol.raiz,30)
 arbol.insertar(arbol.raiz,27)
 arbol.insertar(arbol.raiz,26)
+
 arbol.insertar(arbol.raiz,11)
 arbol.insertar(arbol.raiz,12)
+
 arbol.insertar(arbol.raiz,13)
+
+arbol.insertar(arbol.raiz,51)
+arbol.insertar(arbol.raiz,54)
+arbol.insertar(arbol.raiz,60)
+arbol.insertar(arbol.raiz,9)
+
+arbol.insertar(arbol.raiz,19)
+arbol.insertar(arbol.raiz,20)
+arbol.insertar(arbol.raiz,24)
+
 
 """
 arbol.insertar(arbol.raiz,Dato(1,5))
@@ -431,6 +499,12 @@ arbol.insertar(arbol.raiz,Dato(6,15))
 arbol.insertar(arbol.raiz,Dato(7,12))
 arbol.insertar(arbol.raiz,Dato(8,44))
 arbol.insertar(arbol.raiz,Dato(9,9))
+arbol.insertar(arbol.raiz,Dato(10,9))
 """
 #arbol.recorrer(arbol.raiz)
 arbol.graf('arbol')
+#print(arbol.raiz.p0.derecha.imprimir())
+#print(arbol.raiz.p0.derecha.padre.vector.imprimir())
+#print(arbol.raiz.p0.derecha.p0.derecha.imprimir())
+#print(arbol.raiz.p0.derecha.p0.derecha.padre.vector.imprimir())
+#print(arbol.raiz.p0.derecha.p0.derecha.padre.vector.padre.vector.imprimir())

@@ -599,6 +599,32 @@ class Disparo(object):
         self.fecha = fecha
         self.tiempo = tiempo
         self.numero = numero
+        self.parametro=None
+
+    def __lt__(self,other):
+        if self.parametro == 'x':
+            if self.x != other.x:
+                return self.x < other.x
+            else:
+                return self.numero < other.numero
+        elif self.parametro == 'y':
+            if self.y != other.y:
+                return self.y < other.y
+            else:
+                return self.numero < other.numero
+
+    def __gt__(self,other):
+        if self.parametro == 'x':
+            if self.x != other.x:
+                return self.x > other.x
+            else:
+                return self.numero > other.numero
+        elif self.parametro == 'y':
+            if self.y != other.y:
+                return self.y > other.y
+            else:
+                return self.numero > other.numero
+
 
 tem = Tempo()
 
@@ -1060,7 +1086,7 @@ ar.insertar('Alejandro')
 ar.insertar('Alma')
 ar.insertar('Pablo')
 """
-
+"""
 sat = Satelite()
 bar = Barco(2,1)
 
@@ -1079,3 +1105,4 @@ mat.recorrer()
 mat.graficar('asdf')
 numval('a')
 numval('B')
+"""
