@@ -8,7 +8,7 @@ class Dato(object):
     def __str__(self):
         a = '  x:  ' + str(self.x)
         b = '  n:  ' + str(self.numero)
-        cadena = a + " \n " + b
+        cadena = a + "\\n" + b
         return cadena
     def __eq__(self,other):
         return (self.x == other.x)
@@ -37,7 +37,6 @@ class ArbolB(object):
                 self.insertar(actual.izquierda,dato)
             else:
                 self.insertar(actual.derecha,dato)
-            pass
         else:
             #if dato == 24:
             #    raiz.imprimir()
@@ -259,12 +258,38 @@ class ArbolB(object):
         else:
             return contador
 
-    def buscar(self):
-        pass #implementar busqueda
+    def buscar(self,raiz,dato):
+        #raiz.imprimir()
+        if raiz.buscar(dato) is not None:
+            #print("el dato " + str(dato) +  " existe")
+            return raiz.buscar(dato)
+        else:
+            if raiz.tiene_hijos():
+                actual = raiz.p0
+                while dato > actual.dato and actual.siguiente.dato is not None:
+                    actual = actual.siguiente
+                if dato < actual.dato:
+                    return self.buscar(actual.izquierda,dato)
+                else:
+                    return self.buscar(actual.derecha,dato)
+            else:
+                #print("el dato no existe")
+                return None
 
-    def eliminar(self):
-        pass # (algún día)
-
+    def eliminar(self,dato):
+        d = self.buscar(self.raiz,dato)
+        if d is not None:
+            if d.vector.tiene_hijos():
+                print("tiene hijos")
+            else:
+                if d.vector.cantidad_datos() < 3:
+                    print("tiene solo dos datos")
+                else:
+                    d.dato=None
+                    d.vector.correrizquierda()
+                    print("este si se puede eliminar")
+        else:
+            print("no hay nada")
     def graf(self,imagen):
         dot = Digraph(comment='ArbolB',format='png')
         dot.body.append('node [shape = record,height=.1];')
@@ -315,6 +340,14 @@ class VectorB(object):
                         insertado = True
                         #return print((str(dato) + ' ha sido ingresado'))
 
+    def minimo(self):
+        return self.p0
+
+    def maximo(self):
+        actual = self.p0
+        while actual.siguiente.dato is not None:
+            actual = actual.siguiente
+        return actual
     #que no quede huella que no y que no
 
     def corrernodos(self,actual=None): #Metodo para desplazar los nodos
@@ -352,6 +385,15 @@ class VectorB(object):
             if final.anterior.izquierda is not None:
                 final.anterior.izquierda.padre = final
                 final.anterior.derecha.padre = final
+
+    def correrizquierda(self):
+        actual = self.p0
+        while actual.siguiente is not None:
+            if actual.dato is None:
+                actual.dato = actual.siguiente.dato
+                actual.siguiente.dato = None
+            actual = actual.siguiente
+
 
     def cantidad_datos(self): #Retorna la cantidad de datos no nulos en el vector
         cantidad = 0
@@ -405,8 +447,8 @@ class VectorB(object):
             actual = actual.siguiente
             if actual.dato == valor:
                 return actual
-        print('No se econtró el dato')
-        return ('No se encontró el dato')
+        #print('No se econtró el dato')
+        return None
 
 
 
@@ -443,10 +485,15 @@ prueba.imprimir()
 prueba.insertar(30)
 prueba.imprimir()
 prueba.buscar(15)
+prueba.p0.dato=None
+prueba.correrizquierda()
+prueba.imprimir()
+print(prueba.p0.dato)
 """
 
 # pruebas arbol B
 arbol = ArbolB()
+
 
 arbol.insertar(arbol.raiz,50)
 arbol.insertar(arbol.raiz,5)
@@ -487,7 +534,7 @@ arbol.insertar(arbol.raiz,9)
 arbol.insertar(arbol.raiz,19)
 arbol.insertar(arbol.raiz,20)
 arbol.insertar(arbol.raiz,24)
-
+arbol.eliminar(10)
 
 """
 arbol.insertar(arbol.raiz,Dato(1,5))
@@ -501,8 +548,17 @@ arbol.insertar(arbol.raiz,Dato(8,44))
 arbol.insertar(arbol.raiz,Dato(9,9))
 arbol.insertar(arbol.raiz,Dato(10,9))
 """
-#arbol.recorrer(arbol.raiz)
+
 arbol.graf('arbol')
+"""
+arbol.eliminar(19)
+arbol.eliminar(22)
+arbol.eliminar(10)
+arbol.eliminar(13)
+arbol.eliminar(54)
+"""
+#arbol.raiz.p0.izquierda.imprimir()
+#arbol.recorrer(arbol.raiz)
 #print(arbol.raiz.p0.derecha.imprimir())
 #print(arbol.raiz.p0.derecha.padre.vector.imprimir())
 #print(arbol.raiz.p0.derecha.p0.derecha.imprimir())

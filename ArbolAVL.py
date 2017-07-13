@@ -160,8 +160,30 @@ class AVL(object):
         self.graf(self.raiz,dot)
         dot.render("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen,cleanup=True)
         dot.save(imagen,r"C:\\Users\\Abraham Jelkmann\\Desktop")
+    #arreglar y agregar metodo para editar
+    def buscar(self,raiz,valor):
+        if raiz is None:
+            print('No existe')
+            return None
+        else:
+            if valor == raiz.dato:
+                print(str(raiz.dato) + ' existe')
+                return raiz
+            elif valor < raiz.dato:
+                return self.buscar(raiz.izquierda,valor)
+            else:
+                return self.buscar(raiz.derecha,valor)
+    def editar(self,valor,nuevo):
+        dat = self.buscar(self.raiz,valor)
+        if dat is not None:
+            dat.dato = nuevo
+            print("el dato ha sido cambiado")
+            return "el dato ha sido cambiado"
+        else:
+            print("el dato no existe")
+            return "el dato no existe"
 
-"""
+
 arbol = AVL()
 arbol.insertar(1)
 arbol.insertar(2)
@@ -172,5 +194,9 @@ arbol.insertar(6)
 arbol.insertar(7)
 arbol.insertar(8)
 arbol.insertar(9)
+arbol.buscar(arbol.raiz,9)
+arbol.buscar(arbol.raiz,1)
+arbol.buscar(arbol.raiz,4)
+arbol.buscar(arbol.raiz,6)
+arbol.buscar(arbol.raiz,15)
 arbol.graficar('avl')
-"""

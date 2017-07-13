@@ -3,6 +3,9 @@ from graphviz import Digraph
 import base64
 import threading
 import time
+import sys
+import simplejson as json
+import qrcode
 import datetime
 from threading import Timer
 import math
@@ -175,6 +178,21 @@ class partida(object):
             res = 'ganada'
         cadena = str(self.oponente) + ' ' + str(self.tiros) + ' ' + res
         return cadena
+    def json(self):
+        data={}
+        data['oponente'] = self.oponente
+        data['tiros'] = self.tiros
+        data['acertados'] = self.acertados
+        data['fallados'] = self.fallados
+        if self.resultado == 0:
+            data['resultado'] = 'perdida'
+        else:
+            data['resultado'] = 'ganada'
+        data['damage'] = self.danio
+        json_data = json.dumps(data)
+        return json_data
+
+
 
 class NodoAbb(object):
     def __init__(self,dato=None):
@@ -601,6 +619,13 @@ class Disparo(object):
         self.numero = numero
         self.parametro=None
 
+    def __str__(self):
+        if self.parametro == 'x':
+            cadena = str(self.x) + "\\n" + str(self.y) + str(self.nivel)
+            return cadena
+        if self.parametro == 'y':
+            cadena = str(self.y) + "\\n" + str(self.x) + "\\n" + str(self.nivel)
+
     def __lt__(self,other):
         if self.parametro == 'x':
             if self.x != other.x:
@@ -631,6 +656,9 @@ tem = Tempo()
 ar = ArbolBinario()
 disparos = ListaDoble()
 juegoactual = juego()
+ar.insertar(Usuario('chuz','chuz',0))
+ar.insertar(Usuario('Kentucky','chuz',0))
+ar.insertar(Usuario('Fabiogay','chuz',0))
 
 def revisarsegundos():
     tiempo = tem.final - time.time()
@@ -870,7 +898,7 @@ def iniciar():
     nombre = str(request.form['nombre'])
     contra = str(request.form['contra'])
     dato = ar.buscar(ar.raiz,nombre)
-    print(dato.contrasena)
+    print(nombre + ' ' + contra)
     if dato is not None:
         print(dato.contrasena.strip() + " = " + contra)
         if dato.contrasena == contra:
@@ -1073,6 +1101,12 @@ def graf():
     else:
         return 'error'
 
+@app.route('/android',methods=['POST'])
+def android():
+    nombre = str(request.form['p'])
+    print(nombre + ' desde android')
+    return 'hola'
+
 #@app.route('/')
 
 
@@ -1106,3 +1140,6 @@ mat.graficar('asdf')
 numval('a')
 numval('B')
 """
+p=partida('chuz',32,2,30,1,3)
+img = qrcode.make(p.json())
+img.save("C:\\Users\\Abraham Jelkmann\\Desktop\\qr.bmp")
