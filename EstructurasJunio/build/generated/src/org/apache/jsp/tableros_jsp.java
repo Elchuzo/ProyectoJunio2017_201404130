@@ -60,7 +60,27 @@ public final class tableros_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("<html>\n");
       out.write("    <head>\n");
       out.write("        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n");
+      out.write("        <link href=\"css/bootstrap.css\" rel=\"stylesheet\">\n");
       out.write("        <title>Tableros</title>\n");
+      out.write("\n");
+      out.write("   </head>\n");
+      out.write("   \n");
+      out.write("   <body>\n");
+      out.write("               <nav class=\"navbar navbar-inverse\">\n");
+      out.write("  <div class=\"container-fluid\">\n");
+      out.write("    <div class=\"navbar-header\">\n");
+      out.write("      <a class=\"navbar-brand\" href=\"#\">Battleship</a>\n");
+      out.write("    </div>\n");
+      out.write("    <ul class=\"nav navbar-nav\">\n");
+      out.write("      <li><a href=\"#\">Home</a></li>\n");
+      out.write("      <li class=\"active\"><a href=\"carga.jsp\">Cargar Archivo</a></li>\n");
+      out.write("      <li><a href=\"menugraficas.jsp\">Reportes</a></li>\n");
+      out.write("      <li><a href=\"consultas.jsp\">Consultas</a></li>\n");
+      out.write("      <li><a href=\"tableros.jsp\">Juego Actual</a></li>\n");
+      out.write("      <li><a href=\"Cerrar.jsp\">Cerrar Sesión</a></li>\n");
+      out.write("    </ul>\n");
+      out.write("  </div>\n");
+      out.write("</nav>\n");
       out.write("        ");
 Conexion con = new Conexion();
       out.write("\n");
@@ -68,6 +88,8 @@ Conexion con = new Conexion();
 String[] coordenadas = con.parametros().split(",");
       CSVReader reader = null;
       String[] nextLine = null;
+      String res = "..."; 
+      res = request.getParameter("resultado");
     
       out.write("\n");
       out.write("    </head>\n");
@@ -82,23 +104,67 @@ String[] coordenadas = con.parametros().split(",");
       out.write("            <option value=\"4\">4. Submarinos</option>\n");
       out.write("          </select>\n");
       out.write("        <br />\n");
-      out.write("        Columna:  <input type = \"text\" name = \"x\" size = \"50\" />\n");
-      out.write("         <br />\n");
-      out.write("        Fila:  <input type = \"text\" name = \"y\" size = \"50\" />     \n");
-      out.write("         \n");
-      out.write("         <br />\n");
-      out.write("         <br />\n");
-      out.write("         <input type = \"submit\" value = \"Disparar\" />\n");
-      out.write("      </form>\n");
-      out.write("    \n");
-      out.write("    <br>\n");
-      out.write("    <br>\n");
-      out.write("    <t2>Naves Propias</t2>\n");
-      out.write("    <br>\n");
-      out.write("    <h3>Satelites</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
       out.write("        \n");
-      out.write("        ");
+      out.write("         <div class=\"form-group col-xs-12 floating-label-form-group controls\">\n");
+      out.write("                                <label for=\"name\">Columna</label>\n");
+      out.write("                                <input type=\"text\" class=\"form-control\" placeholder=\"Columna\" name=\"x\" size=\"50\" required data-validation-required-message=\"Por favor ingrese una columna.\">\n");
+      out.write("        </div>\n");
+      out.write("        <div class=\"form-group col-xs-12 floating-label-form-group controls\">\n");
+      out.write("                                <label for=\"name\">Fila</label>\n");
+      out.write("                                <input type=\"text\" class=\"form-control\" placeholder=\"Fila\" name=\"y\" size=\"50\" required data-validation-required-message=\"Por favor ingrese una fila.\">\n");
+      out.write("        </div>\n");
+      out.write("\n");
+      out.write("        <div class=\"form-group col-xs-12\" align=\"center\">\n");
+      out.write("            <button type=\"submit\" class=\"btn btn-success btn-lg\">Disparar</button>\n");
+      out.write("        </div>\n");
+      out.write("         \n");
+      out.write("      </form>\n");
+      out.write("    ");
+if(res != null)
+    {      
+        out.print(res);
+}
+      out.write("\n");
+      out.write("    <br>\n");
+      out.write("    <br>\n");
+      out.write("    \n");
+      out.write("    <div class=\"container\">\n");
+      out.write("    <div class=\"col-sm-6\">                \n");
+      out.write("\n");
+      out.write("    <h2>Naves Propias</h2>\n");
+      out.write("\n");
+      out.write("    <div class=\"tab\">\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Satelites1')\" id=\"defaultOpen\">Satelites</button>\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Aviones1')\">Aviones</button>\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Barcos1')\">Barcos</button>\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Submarinos1')\">Submarinos</button>\n");
+      out.write("    </div>\n");
+      out.write("\n");
+      out.write("    </div>\n");
+      out.write("    <div class=\"col-sm-6\">\n");
+      out.write("\n");
+      out.write("    <h2>Naves Enemigas</h2>  \n");
+      out.write("\n");
+      out.write("    <div class=\"tab\">\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Satelites2')\">Satelites</button>\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Aviones2')\">Aviones</button>\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Barcos2')\">Barcos</button>\n");
+      out.write("      <button class=\"tablinks\" onclick=\"openMap(event, 'Submarinos2')\">Submarinos</button>\n");
+      out.write("    </div>\n");
+      out.write("\n");
+      out.write("    </div>\n");
+      out.write("    </div>\n");
+      out.write("    \n");
+      out.write("      <hr>\n");
+      out.write("      \n");
+      out.write("      <div id=\"Satelites1\" class=\"tabcontent\">\n");
+      out.write("  <h3>Satelites 1</h3>\n");
+      out.write("\n");
+      out.write("  <div class=\"container\">\n");
+      out.write("  <div class=\"col-sm-2\">\n");
+      out.write("      <table class=\"table table-responsive table-bordered table-he\" >\n");
+      out.write("        \n");
+      out.write("          ");
 
             try{
                  StringReader read = new StringReader(con.tablero("1", session.getAttribute("nickname").toString()));
@@ -110,80 +176,91 @@ String[] coordenadas = con.parametros().split(",");
             }
            
       out.write("\n");
-      out.write("           \n");
-      out.write("    ");
+      out.write("          \n");
+      out.write("          <thead>  <!--acá las cabezeras-->\n");
+      out.write("    <tr> \n");
+      out.write("      <th>1</th>\n");
+      out.write("    </tr>\n");
+      out.write("  </thead>\n");
+      out.write("    <tbody>\n");
+      out.write("\n");
+      out.write("                ");
  for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
-    {  
-        
-      out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
-    {  
-        
-      out.write("\n");
-      out.write("        <th> ");
-
-try{
-  //eliminar el ciclo, leer de forma más eficiente
-     //con.errores("entrando al ciclo");
-    // con.errores(String.valueOf(Integer.parseInt(nextLine[0])-1) + " = " + String);
-        
-           if(nextLine != null)
-{
-    //con.errores(nextLine[0] + " = " + b + nextLine[1]);
-    
-if(Integer.parseInt(nextLine[0])-1 == b && Integer.parseInt(nextLine[1])-1 == a)
-        {        
-           // con.errores(nextLine[2]);
-            if(Integer.parseInt(nextLine[2]) == 0)
-            {
+            {  
                 
+      out.write("\n");
+      out.write("            <tr>\n");
+      out.write("                 ");
+ for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+            {  
+                
+      out.write("\n");
+      out.write("                <td> ");
+
+        try{
+          //eliminar el ciclo, leer de forma más eficiente
+             //con.errores("entrando al ciclo");
+            // con.errores(String.valueOf(Integer.parseInt(nextLine[0])-1) + " = " + String);
+
+                   if(nextLine != null)
+        {
+            //con.errores(nextLine[0] + " = " + b + nextLine[1]);
+
+        if(Integer.parseInt(nextLine[0])-1 == b && Integer.parseInt(nextLine[1])-1 == a)
+                {        
+                   // con.errores(nextLine[2]);
+                    if(Integer.parseInt(nextLine[2]) == 0)
+                    {
+                        
       out.write(" o ");
 
-            }
-            else{
-                
+                    }
+                    else{
+                        
       out.write(" x ");
 
-            }
-nextLine = reader.readNext();
+                    }
+        nextLine = reader.readNext();
+                }
+
         }
 
-}
-        
 
-}catch(Exception ex)
-{
-    
-out.println(ex.toString());
-System.out.println(ex.toString());
-con.errores(ex.toString());
-}
-       
-        
+        }catch(Exception ex)
+        {
+
+        out.println(ex.toString());
+        System.out.println(ex.toString());
+        con.errores(ex.toString());
+        }
+
+                
       out.write("\n");
-      out.write("        </th>\n");
-      out.write("        ");
+      out.write("                </td>\n");
+      out.write("                ");
+
+                    }
+      out.write("\n");
+      out.write("            </tr>\n");
+      out.write("            ");
 
             }
       out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
+      out.write("       \n");
+      out.write("    </tbody>\n");
       out.write("    </table>\n");
-      out.write("    \n");
-      out.write("        <br>\n");
-      out.write("    <br>\n");
-      out.write("    ");
- nextLine=null;
+      out.write("</div>\n");
+      out.write("</div>\n");
+      out.write("</div>\n");
+      out.write("            \n");
+      out.write("      <div id=\"Aviones1\" class=\"tabcontent\">\n");
+      out.write("  <h3>Aviones 1</h3>\n");
       out.write("\n");
-      out.write("    <h3>Aviones</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
+      out.write("  <div class=\"container\">\n");
+      out.write("  <div class=\"col-sm-2\">\n");
+      out.write("      <table class=\"table table-responsive table-bordered table-he\" >\n");
       out.write("        \n");
-      out.write("        ");
+      out.write("          ");
 
             try{
                  StringReader read = new StringReader(con.tablero("2", session.getAttribute("nickname").toString()));
@@ -195,72 +272,99 @@ con.errores(ex.toString());
             }
            
       out.write("\n");
-      out.write("    ");
- for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
-    {  
-        
+      out.write("          \n");
+      out.write("          <thead>  <!--acá las cabezeras-->\n");
+      out.write("    <tr> \n");
+      out.write("      <th>1</th>\n");
+      out.write("    </tr>\n");
+      out.write("  </thead>\n");
+      out.write("    <tbody>\n");
       out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
-    {  
-        
-      out.write("\n");
-      out.write("        <th>\n");
-      out.write("            ");
-
-try{
-           if(nextLine != null)
-{   
-if(Integer.parseInt(nextLine[0])-1 == x && Integer.parseInt(nextLine[1])-1 == y)
-        {        
-            //con.errores(nextLine[2]);
-            if(Integer.parseInt(nextLine[2]) == 0)
-            {
+      out.write("                ");
+ for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+            {  
                 
+      out.write("\n");
+      out.write("            <tr>\n");
+      out.write("                 ");
+ for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+            {  
+                
+      out.write("\n");
+      out.write("                <td> ");
+
+        try{
+          //eliminar el ciclo, leer de forma más eficiente
+             //con.errores("entrando al ciclo");
+            // con.errores(String.valueOf(Integer.parseInt(nextLine[0])-1) + " = " + String);
+
+                   if(nextLine != null)
+        {
+            //con.errores(nextLine[0] + " = " + b + nextLine[1]);
+
+        if(Integer.parseInt(nextLine[0])-1 == b && Integer.parseInt(nextLine[1])-1 == a)
+                {        
+                   // con.errores(nextLine[2]);
+                    if(Integer.parseInt(nextLine[2]) == 0)
+                    {
+                        
       out.write(" o ");
 
-            }
-            else{
-                
+                    }
+                    else{
+                        
       out.write(" x ");
 
-            }
-nextLine = reader.readNext();
+                    }
+        nextLine = reader.readNext();
+                }
+
         }
 
-}
-}catch(Exception ex)
-{
-    
-out.println(ex.toString());
-System.out.println(ex.toString());
-con.errores(ex.toString());
-}
-       
-        
+
+        }catch(Exception ex)
+        {
+
+        out.println(ex.toString());
+        System.out.println(ex.toString());
+        con.errores(ex.toString());
+        }
+
+                
       out.write("\n");
-      out.write("        </th>\n");
-      out.write("        ");
+      out.write("                </td>\n");
+      out.write("                ");
+
+                    }
+      out.write("\n");
+      out.write("            </tr>\n");
+      out.write("            ");
 
             }
       out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
+      out.write("       \n");
+      out.write("    </tbody>\n");
       out.write("    </table>\n");
-      out.write("    \n");
-      out.write("        <br>\n");
-      out.write("    <br>\n");
+      out.write("</div>\n");
+      out.write("</div>\n");
+      out.write("</div>\n");
+      out.write("            \n");
       out.write("    \n");
       out.write("    ");
  nextLine=null;
       out.write("\n");
-      out.write("    <h3>Barcos</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
-      out.write("         ");
+      out.write("    \n");
+      out.write("        <br>\n");
+      out.write("    <br>\n");
+      out.write("    \n");
+      out.write("       <div id=\"Barcos1\" class=\"tabcontent\">\n");
+      out.write("  <h3>Barcos 1</h3>\n");
+      out.write("\n");
+      out.write("  <div class=\"container\">\n");
+      out.write("  <div class=\"col-sm-2\">\n");
+      out.write("      <table class=\"table table-responsive table-bordered table-he\" >\n");
+      out.write("        \n");
+      out.write("          ");
 
             try{
                  StringReader read = new StringReader(con.tablero("3", session.getAttribute("nickname").toString()));
@@ -272,73 +376,94 @@ con.errores(ex.toString());
             }
            
       out.write("\n");
-      out.write("    ");
- for(int j=0;j<Integer.parseInt(coordenadas[1]);j++)
-    {  
-        
+      out.write("          \n");
+      out.write("          <thead>  <!--acá las cabezeras-->\n");
+      out.write("    <tr> \n");
+      out.write("      <th>1</th>\n");
+      out.write("    </tr>\n");
+      out.write("  </thead>\n");
+      out.write("    <tbody>\n");
       out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int i=0;i<Integer.parseInt(coordenadas[0]);i++)
-    {  
-        
-      out.write("\n");
-      out.write("        <th>\n");
-      out.write("            \n");
-      out.write("            ");
-
-try{
-           if(nextLine != null)
-{   
-if(Integer.parseInt(nextLine[0])-1 == i && Integer.parseInt(nextLine[1])-1 == j)
-        {        
-            //con.errores(nextLine[2]);
-            if(Integer.parseInt(nextLine[2]) == 0)
-            {
+      out.write("                ");
+ for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+            {  
                 
+      out.write("\n");
+      out.write("            <tr>\n");
+      out.write("                 ");
+ for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+            {  
+                
+      out.write("\n");
+      out.write("                <td> ");
+
+        try{
+          //eliminar el ciclo, leer de forma más eficiente
+             //con.errores("entrando al ciclo");
+            // con.errores(String.valueOf(Integer.parseInt(nextLine[0])-1) + " = " + String);
+
+                   if(nextLine != null)
+        {
+            //con.errores(nextLine[0] + " = " + b + nextLine[1]);
+
+        if(Integer.parseInt(nextLine[0])-1 == b && Integer.parseInt(nextLine[1])-1 == a)
+                {        
+                   // con.errores(nextLine[2]);
+                    if(Integer.parseInt(nextLine[2]) == 0)
+                    {
+                        
       out.write(" o ");
 
-            }
-            else{
-                
+                    }
+                    else{
+                        
       out.write(" x ");
 
-            }
-nextLine = reader.readNext();
+                    }
+        nextLine = reader.readNext();
+                }
+
         }
 
-}
-}catch(Exception ex)
-{
-    
-out.println(ex.toString());
-System.out.println(ex.toString());
-con.errores(ex.toString());
-}
-       
-        
+
+        }catch(Exception ex)
+        {
+
+        out.println(ex.toString());
+        System.out.println(ex.toString());
+        con.errores(ex.toString());
+        }
+
+                
       out.write("\n");
-      out.write("        </th>\n");
-      out.write("        ");
+      out.write("                </td>\n");
+      out.write("                ");
+
+                    }
+      out.write("\n");
+      out.write("            </tr>\n");
+      out.write("            ");
 
             }
       out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
+      out.write("       \n");
+      out.write("    </tbody>\n");
       out.write("    </table>\n");
+      out.write("</div>\n");
+      out.write("</div>\n");
+      out.write("</div>\n");
       out.write("    \n");
       out.write("        <br>\n");
       out.write("    <br>\n");
       out.write("    \n");
-      out.write("    ");
- nextLine=null;
+      out.write(" <div id=\"Submarinos1\" class=\"tabcontent\">\n");
+      out.write("  <h3>Submarinos 1</h3>\n");
       out.write("\n");
-      out.write("    <h3>Submarinos</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
-      out.write("         ");
+      out.write("  <div class=\"container\">\n");
+      out.write("  <div class=\"col-sm-2\">\n");
+      out.write("      <table class=\"table table-responsive table-bordered table-he\" >\n");
+      out.write("        \n");
+      out.write("          ");
 
             try{
                  StringReader read = new StringReader(con.tablero("4", session.getAttribute("nickname").toString()));
@@ -350,178 +475,93 @@ con.errores(ex.toString());
             }
            
       out.write("\n");
-      out.write("    ");
- for(int yy=0;yy<Integer.parseInt(coordenadas[1]);yy++)
-    {  
-        
+      out.write("          \n");
+      out.write("          <thead>  <!--acá las cabezeras-->\n");
+      out.write("    <tr> \n");
+      out.write("      <th>1</th>\n");
+      out.write("    </tr>\n");
+      out.write("  </thead>\n");
+      out.write("    <tbody>\n");
       out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int xx=0;xx<Integer.parseInt(coordenadas[0]);xx++)
-    {  
-        
-      out.write("\n");
-      out.write("        <th>\n");
-      out.write("            ");
-
-try{
-           if(nextLine != null)
-{   
-if(Integer.parseInt(nextLine[0])-1 == xx && Integer.parseInt(nextLine[1])-1 == yy)
-        {        
-            //con.errores(nextLine[2]);
-            if(Integer.parseInt(nextLine[2]) == 0)
-            {
+      out.write("                ");
+ for(int a=0;a<Integer.parseInt(coordenadas[1]);a++)
+            {  
                 
+      out.write("\n");
+      out.write("            <tr>\n");
+      out.write("                 ");
+ for(int b=0;b<Integer.parseInt(coordenadas[0]);b++)
+            {  
+                
+      out.write("\n");
+      out.write("                <td> ");
+
+        try{
+          //eliminar el ciclo, leer de forma más eficiente
+             //con.errores("entrando al ciclo");
+            // con.errores(String.valueOf(Integer.parseInt(nextLine[0])-1) + " = " + String);
+
+                   if(nextLine != null)
+        {
+            //con.errores(nextLine[0] + " = " + b + nextLine[1]);
+
+        if(Integer.parseInt(nextLine[0])-1 == b && Integer.parseInt(nextLine[1])-1 == a)
+                {        
+                   // con.errores(nextLine[2]);
+                    if(Integer.parseInt(nextLine[2]) == 0)
+                    {
+                        
       out.write(" o ");
 
-            }
-            else{
-                
+                    }
+                    else{
+                        
       out.write(" x ");
 
-            }
-nextLine = reader.readNext();
+                    }
+        nextLine = reader.readNext();
+                }
+
         }
 
-}
-}catch(Exception ex)
-{
-    
-out.println(ex.toString());
-System.out.println(ex.toString());
-con.errores(ex.toString());
-}
-       
-        
+
+        }catch(Exception ex)
+        {
+
+        out.println(ex.toString());
+        System.out.println(ex.toString());
+        con.errores(ex.toString());
+        }
+
+                
       out.write("\n");
-      out.write("        </th>\n");
-      out.write("        ");
+      out.write("                </td>\n");
+      out.write("                ");
+
+                    }
+      out.write("\n");
+      out.write("            </tr>\n");
+      out.write("            ");
 
             }
       out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
+      out.write("       \n");
+      out.write("    </tbody>\n");
       out.write("    </table>\n");
+      out.write("</div>\n");
+      out.write("</div>\n");
+      out.write("</div>\n");
       out.write("    \n");
       out.write("    <br>\n");
       out.write("    <br>\n");
-      out.write("    <t2>Naves Enemigas</t2>\n");
-      out.write("    <br>\n");
-      out.write("        <h3>Satelites</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
-      out.write("    ");
- for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
-    {  
-        
       out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
-    {  
-        
       out.write("\n");
-      out.write("        <th></th>\n");
-      out.write("        ");
-
-            }
-      out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
-      out.write("    </table>\n");
-      out.write("    \n");
-      out.write("        <br>\n");
-      out.write("    <br>\n");
-      out.write("    \n");
-      out.write("    <h3>Aviones</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
-      out.write("    ");
- for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
-    {  
-        
-      out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
-    {  
-        
-      out.write("\n");
-      out.write("        <th></th>\n");
-      out.write("        ");
-
-            }
-      out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
-      out.write("    </table>\n");
-      out.write("    \n");
-      out.write("        <br>\n");
-      out.write("    <br>\n");
       out.write("    \n");
       out.write("    \n");
-      out.write("    <h3>Barcos</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
-      out.write("    ");
- for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
-    {  
-        
-      out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
-    {  
-        
-      out.write("\n");
-      out.write("        <th></th>\n");
-      out.write("        ");
-
-            }
-      out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
-      out.write("    </table>\n");
-      out.write("    \n");
-      out.write("        <br>\n");
-      out.write("    <br>\n");
-      out.write("    \n");
-      out.write("    \n");
-      out.write("    <h3>Submarinos</h3>\n");
-      out.write("    <table border=\"1\" cellpadding=\"8\">\n");
-      out.write("    ");
- for(int y=0;y<Integer.parseInt(coordenadas[1]);y++)
-    {  
-        
-      out.write("\n");
-      out.write("    <tr>\n");
-      out.write("         ");
- for(int x=0;x<Integer.parseInt(coordenadas[0]);x++)
-    {  
-        
-      out.write("\n");
-      out.write("        <th></th>\n");
-      out.write("        ");
-
-            }
-      out.write("\n");
-      out.write("    </tr>\n");
-      out.write("    ");
-
-    }
-      out.write("\n");
-      out.write("    </table>\n");
-      out.write("    \n");
+      out.write("    <script src=\"js/scripts1.js\"></script>\n");
+      out.write("    <script type=\"text/javascript\">\n");
+      out.write("        document.getElementById(\"defaultOpen\").click();\n");
+      out.write("    </script>\n");
       out.write("    \n");
       out.write("    </body>\n");
       out.write("</html>\n");

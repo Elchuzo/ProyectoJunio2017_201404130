@@ -218,6 +218,14 @@ public class Conexion {
         return r;
     }
     
+    public String enemigo(String nickname) throws IOException{
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("jugador",nickname)
+                .build();
+        String r = getString("jugadores", formBody);
+        return r;
+    }
+    
     public static String decodeToImage(String imageString,String imagen) throws IOException {
  
         BufferedImage image = null;

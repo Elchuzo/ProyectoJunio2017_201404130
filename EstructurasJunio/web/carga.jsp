@@ -67,6 +67,30 @@
          <br />
          <input type = "submit" value = "Cargar" />
       </form>
+      <h3>Tiros: </h3>
+      <form action = "file.jsp" method = "post"
+         enctype = "multipart/form-data">
+         <input type = "file" name = "tiros" size = "50" />
+         <br />
+         <br />
+         <input type = "submit" value = "Cargar" />
+      </form>
+      <h3>Contactos: </h3>
+      <form action = "file.jsp" method = "post"
+         enctype = "multipart/form-data">
+         <input type = "file" name = "contactos" size = "50" />
+         <br />
+         <br />
+         <input type = "submit" value = "Cargar" />
+      </form>
+      <h3>Historial: </h3>
+      <form action = "file.jsp" method = "post"
+         enctype = "multipart/form-data">
+         <input type = "file" name = "juego" size = "50" />
+         <br />
+         <br />
+         <input type = "submit" value = "Cargar" />
+      </form>
       
       
       

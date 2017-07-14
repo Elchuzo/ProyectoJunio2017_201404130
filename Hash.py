@@ -145,7 +145,7 @@ class Usuario(object):
 
 
 
-hs = Hash(47,60,30)
+#hs = Hash(47,60,30)
 """
 hs.insertar(Usuario('chuz','chuz',0))
 hs.insertar(Usuario('Tbone','chuz',0))
@@ -188,5 +188,5 @@ hs.eliminar(Usuario('taon3','chuz',0))
 hs.eliminar(Usuario('taon4','chuz',0))
 """
 
-hs.recorrer()
-hs.graficar('hash')
+#hs.recorrer()
+#hs.graficar('hash')

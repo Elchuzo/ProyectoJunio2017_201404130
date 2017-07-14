@@ -1,5 +1,11 @@
 from graphviz import Digraph
 
+
+def numval(letra):
+    numero = ord(letra.lower()) - 96
+    #print(str(numero))
+    return str(numero)
+    
 class NodoMatriz(object):
     def __init__(self,dato=None):
         self.dato = 'X'

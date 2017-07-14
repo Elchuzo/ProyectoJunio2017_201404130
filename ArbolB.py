@@ -492,6 +492,7 @@ print(prueba.p0.dato)
 """
 
 # pruebas arbol B
+"""
 arbol = ArbolB()
 
 
@@ -535,7 +536,7 @@ arbol.insertar(arbol.raiz,19)
 arbol.insertar(arbol.raiz,20)
 arbol.insertar(arbol.raiz,24)
 arbol.eliminar(10)
-
+"""
 """
 arbol.insertar(arbol.raiz,Dato(1,5))
 arbol.insertar(arbol.raiz,Dato(2,25))
@@ -549,7 +550,7 @@ arbol.insertar(arbol.raiz,Dato(9,9))
 arbol.insertar(arbol.raiz,Dato(10,9))
 """
 
-arbol.graf('arbol')
+#arbol.graf('arbol')
 """
 arbol.eliminar(19)
 arbol.eliminar(22)

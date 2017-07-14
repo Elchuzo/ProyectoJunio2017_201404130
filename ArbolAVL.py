@@ -183,7 +183,7 @@ class AVL(object):
             print("el dato no existe")
             return "el dato no existe"
 
-
+"""
 arbol = AVL()
 arbol.insertar(1)
 arbol.insertar(2)
@@ -200,3 +200,4 @@ arbol.buscar(arbol.raiz,4)
 arbol.buscar(arbol.raiz,6)
 arbol.buscar(arbol.raiz,15)
 arbol.graficar('avl')
+"""
