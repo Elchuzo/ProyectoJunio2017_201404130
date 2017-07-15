@@ -5,7 +5,7 @@ def numval(letra):
     numero = ord(letra.lower()) - 96
     #print(str(numero))
     return str(numero)
-    
+
 class NodoMatriz(object):
     def __init__(self,dato=None):
         self.dato = 'X'
@@ -15,13 +15,14 @@ class NodoMatriz(object):
         self.izquierda=None
         self.hundido=False
         self.disparado=False
+        self.nave=None
         self.x=0
         self.y=0
 
 class MatrizDispersa(object):
     def __init__(self):
         self.cabeza=NodoMatriz()
-    def insertar(self,x,y):
+    def insertar(self,x,y,nave=None):
         nodox = NodoMatriz()
         nodox.x = x
         nodox.dato = (str(x)+','+str(0))
@@ -32,6 +33,7 @@ class MatrizDispersa(object):
         nodoin.x=x
         nodoin.y=y
         nodoin.dato = (str(x)+','+str(y))
+        nodoin.nave=nave
         insertado=False
         horizontal=False
         vertical=False

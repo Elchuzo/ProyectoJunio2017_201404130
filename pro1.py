@@ -56,92 +56,127 @@ class juego(object):
         self.cubodisparos2 = Cubo()
         self.cuboinicial2=Cubo()
 
+        self.tirosa1=0
+        self.tirosa2=0
+        self.tirosf1=0
+        self.tirosf2=0
+        self.actuales=0
         self.turno=None
-        self.numerodisparos = 0
+        self.numerodisparos=0
         self.disparos=0
         self.historial=ArbolB()
     def cambiarturno(self):
-        if self.jugador1.upper() == self.turno.upper():
-            self.turno = self.jugador2
-            print('Turno de: ' + self.jugador2)
-        elif self.jugador2.upper() == self.turno.upper():
-            self.turno = self.jugador1
-            print('Turno de: ' + self.jugador1)
+        if self.variante == 2:
+            self.actuales += 1
+            if self.actuales == self.numerodisparos:
+                if self.jugador1.upper() == self.turno.upper():
+                    self.turno = self.jugador2
+                    print('Turno de: ' + self.jugador2)
+                elif self.jugador2.upper() == self.turno.upper():
+                    self.turno = self.jugador1
+                    print('Turno de: ' + self.jugador1)
+                else:
+                    print('Error')
+                self.actuales = 0
         else:
-            print('Error')
+            if self.jugador1.upper() == self.turno.upper():
+                self.turno = self.jugador2
+                print('Turno de: ' + self.jugador2)
+            elif self.jugador2.upper() == self.turno.upper():
+                self.turno = self.jugador1
+                print('Turno de: ' + self.jugador1)
+            else:
+                print('Error')
 
 class Barco(object):
     def __init__(self,modo=None,direccion=None):
         self.modo=modo
         self.direccion=direccion
+        if modo == 1:
+            self.casillas = 1
+        elif modo == 2:
+            self.casillas = 2
+        elif modo == 3:
+            self.casillas = 3
     def colocar(self,matriz,x,y):
         if self.modo == 1:
-            matriz.insertar(x,y)
+            matriz.insertar(x,y,self)
         elif self.modo == 2:
             if self.direccion == 1:
-                matriz.insertar(x,y)
-                matriz.insertar(sumar(x,1),y)
+                matriz.insertar(x,y,self)
+                matriz.insertar(sumar(x,1),y,self)
             else:
-                matriz.insertar(x,y)
-                matriz.insertar(x,(y+1))
+                matriz.insertar(x,y,self)
+                matriz.insertar(x,(y+1),self)
         elif self.modo == 3:
             if self.direccion == 1:
-                matriz.insertar(x,y)
-                matriz.insertar(sumar(x,1),y)
-                matriz.insertar(sumar(x,2),y)
+                matriz.insertar(x,y,self)
+                matriz.insertar(sumar(x,1),y,self)
+                matriz.insertar(sumar(x,2),y,self)
             else:
-                matriz.insertar(x,y)
-                matriz.insertar(x,(y+1))
-                matriz.insertar(x,(y+2))
+                matriz.insertar(x,y,self)
+                matriz.insertar(x,(y+1),self)
+                matriz.insertar(x,(y+2),self)
 
 class Avion(object):
     def __init__(self,modo=None):
         self.modo=modo
+        if modo == 1:
+            self.casillas = 4
+        elif modo == 2:
+            self.casillas = 6
     def colocar(self,matriz,x,y):
         if self.modo == 1:
-            matriz.insertar(x,y)
-            matriz.insertar(sumar(x,1),y)
-            matriz.insertar(restar(x,1),y)
-            matriz.insertar(x,y+1)
+            matriz.insertar(x,y,self)
+            matriz.insertar(sumar(x,1),y,self)
+            matriz.insertar(restar(x,1),y,self)
+            matriz.insertar(x,y+1,self)
         elif self.modo == 2:
-            matriz.insertar(x,y-1)
-            matriz.insertar(x,y)
-            matriz.insertar(sumar(x,1),y)
-            matriz.insertar(restar(x,1),y)
-            matriz.insertar(x,y+1)
-            matriz.insertar(x,y+2)
+            matriz.insertar(x,y-1,self)
+            matriz.insertar(x,y,self)
+            matriz.insertar(sumar(x,1),y,self)
+            matriz.insertar(restar(x,1),y,self)
+            matriz.insertar(x,y+1,self)
+            matriz.insertar(x,y+2,self)
              #colocar aviones
 
 class Submarino(object):
     def __init__(self,modo,direccion):
         self.modo=modo
         self.direccion = direccion
+        if modo == 1:
+            self.casillas = 1
+        elif modo == 2:
+            self.casillas = 2
+        elif modo == 3:
+            self.casillas = 3
     def colocar(self,matriz,x,y):
         if self.modo == 1:
-            matriz.insertar(x,y)
+            matriz.insertar(x,y,self)
         elif self.modo == 2:
             if self.direccion == 1:
-                matriz.insertar(x,y)
-                matriz.insertar(sumar(x,1),y)
+                matriz.insertar(x,y,self)
+                matriz.insertar(sumar(x,1),y,self)
             else:
-                matriz.insertar(x,y)
-                matriz.insertar(x,(y+1))
+                matriz.insertar(x,y,self)
+                matriz.insertar(x,(y+1),self)
         elif self.modo == 3:
             if self.direccion == 1:
-                matriz.insertar(x,y)
-                matriz.insertar(sumar(x,1),y)
-                matriz.insertar(sumar(x,2),y)
+                matriz.insertar(x,y,self)
+                matriz.insertar(sumar(x,1),y,self)
+                matriz.insertar(sumar(x,2),y,self)
             else:
-                matriz.insertar(x,y)
-                matriz.insertar(x,(y+1))
-                matriz.insertar(x,(y+2))
+                matriz.insertar(x,y,self)
+                matriz.insertar(x,(y+1),self)
+                matriz.insertar(x,(y+2),self)
 
 class Satelite(object):
     def __init__(self,x=0,y=0):
         self.x=x
         self.y=y
+        self.casillas=1
     def colocar(self,matriz,x,y):
-        matriz.insertar(x,y)
+        matriz.insertar(x,y,self)
 
 class Usuario(object):
     def __init__(self,nombre=None,contrasena=None,conectado=None):
@@ -190,6 +225,8 @@ class partida(object):
         self.fallados=fallados
         self.resultado=resultado
         self.danio=danio
+        self.eliminadas=0
+
     def __str__(self):
         if self.resultado == 0:
             res = 'perdida'
@@ -239,8 +276,16 @@ class ListaDoble(object):
         #graf.render('doble.gv',cleanup=True)
         #graf.save('doble',"C:\\Users\\Abraham Jelkmann\\Desktop")
         return graf
-
-
+    def insertarfinal(self,dato):
+        nuevo = NodoDoble(dato)
+        if self.inicio is not None:
+            inicial = self.inicio
+            while inicial.derecha is not None:
+                inicial = inicial.derecha
+            inicial.derecha = nuevo
+            nuevo.izquierda = inicial
+        else:
+            self.inicio=nuevo
 
 def Reprint(s):
     try:
@@ -315,6 +360,7 @@ class Disparo(object):
 
 tem = Tempo()
 
+
 ar = ArbolBinario()
 disparos = ListaDoble()
 juegoactual = juego()
@@ -331,6 +377,11 @@ def contar(tiempo):
     tem.final = time.time() + int(tiempo)
     return 'iniciado'
 
+def guardar():
+    jugador1 = ar.buscar(ar.raiz,juegoactual.jugador1)
+    jugador2 = ar.buscar(ar.raiz,juegoactual.jugador2)
+    #par = partida(oponente=jugador1)
+    #terminar código partida
 def disparo(x,y,nivel,tipo,resultado,emisor,receptor,fecha,tiempo=0):
     if juegoactual.variante == 2:
         if juegoactual.disparos == 0:
@@ -372,6 +423,7 @@ def disparar():
                         if not nod.hundido:
                             juegoactual.acertados1.satelites.insertar(posx,int(posy))
                             juegoactual.cubodisparos1.satelites.insertar(posx,int(posy))
+                            juegoactual
                             disparo(posx,int(posy),juegoactual.tipo_disparo,1,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
                             nod.hundido = True
                             #Agregar código para ráfaga
@@ -726,6 +778,7 @@ def cargar():
         juegoactual.tipo_disparo = tipodisparo
         juegoactual.numerodisparos = numerodisparos
         juegoactual.disparos =0
+        t = Timer(tiempo,guardar)
         print('tiempo de juego: ' + tiempo + ' segundos')
         return 'juego creado'
 

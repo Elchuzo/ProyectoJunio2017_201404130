@@ -126,3 +126,4 @@ class ArbolBinario(object):
         self.graficarconlista(raiz.izquierda,contador,dot)
         self.graficarconlista(raiz.derecha,contador,dot)
         return dot
+    
