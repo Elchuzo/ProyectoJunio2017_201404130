@@ -23,10 +23,11 @@
     </div>
     <ul class="nav navbar-nav">
       <li><a href="#">Home</a></li>
-      <li class="active"><a href="carga.jsp">Cargar Archivo</a></li>
-      <li><a href="menugraficas.jsp">Reportes</a></li>
+      <li ><a href="carga.jsp">Cargar Archivo</a></li>
+      <li><a href="menugraficas.jsp">Historial</a></li>
+      <li> <a href="menugraficas.jsp">Reportes</a></li>
       <li><a href="consultas.jsp">Consultas</a></li>
-      <li><a href="tableros.jsp">Juego Actual</a></li>
+      <li class="active"><a href="tableros.jsp">Juego Actual</a></li>
       <li><a href="Cerrar.jsp">Cerrar Sesión</a></li>
     </ul>
   </div>
@@ -437,7 +438,7 @@
         
           <%
             try{
-                 StringReader read = new StringReader(con.tablero("1", con.enemigo(session.getAttribute("nickname").toString())));
+                 StringReader read = new StringReader(con.tableroen("1", con.enemigo(session.getAttribute("nickname").toString())));
                  reader = new CSVReader(read);
                  nextLine = reader.readNext();
             }catch(Exception ex)
@@ -518,7 +519,7 @@
         
           <%
             try{
-                 StringReader read = new StringReader(con.tablero("2", con.enemigo(session.getAttribute("nickname").toString())));
+                 StringReader read = new StringReader(con.tableroen("2", con.enemigo(session.getAttribute("nickname").toString())));
                  reader = new CSVReader(read);
                  nextLine = reader.readNext();
             }catch(Exception ex)
@@ -598,7 +599,7 @@
         
           <%
             try{
-                 StringReader read = new StringReader(con.tablero("3", con.enemigo(session.getAttribute("nickname").toString())));
+                 StringReader read = new StringReader(con.tableroen("3", con.enemigo(session.getAttribute("nickname").toString())));
                  reader = new CSVReader(read);
                  nextLine = reader.readNext();
             }catch(Exception ex)
@@ -679,7 +680,7 @@
         
           <%
             try{
-                 StringReader read = new StringReader(con.tablero("4", con.enemigo(session.getAttribute("nickname").toString())));
+                 StringReader read = new StringReader(con.tableroen("4", con.enemigo(session.getAttribute("nickname").toString())));
                  reader = new CSVReader(read);
                  nextLine = reader.readNext();
             }catch(Exception ex)

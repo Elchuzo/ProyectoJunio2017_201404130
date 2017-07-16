@@ -22,7 +22,7 @@ class NodoMatriz(object):
 class MatrizDispersa(object):
     def __init__(self):
         self.cabeza=NodoMatriz()
-    def insertar(self,x,y,nave=None):
+    def insertar(self,x,y,nave=None,hundido=False):
         nodox = NodoMatriz()
         nodox.x = x
         nodox.dato = (str(x)+','+str(0))
@@ -32,6 +32,7 @@ class MatrizDispersa(object):
         nodoin=NodoMatriz()
         nodoin.x=x
         nodoin.y=y
+        nodoin.hundido=hundido
         nodoin.dato = (str(x)+','+str(y))
         nodoin.nave=nave
         insertado=False

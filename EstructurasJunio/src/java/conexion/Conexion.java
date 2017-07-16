@@ -218,6 +218,16 @@ public class Conexion {
         return r;
     }
     
+     public String tableroen(String nivel,String nickname) throws IOException{
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("nivel",nivel)
+                .add("usuario",nickname)
+                .build();
+        String r = getString("tablerosen", formBody);
+        
+        return r;
+    }
+    
     public String enemigo(String nickname) throws IOException{
         RequestBody formBody = new FormEncodingBuilder()
                 .add("jugador",nickname)

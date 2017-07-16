@@ -25,6 +25,7 @@
     <ul class="nav navbar-nav">
       <li><a href="#">Home</a></li>
       <li class="active"><a href="carga.jsp">Cargar Archivo</a></li>
+      <li><a href="menugraficas.jsp">Historial</a></li>
       <li><a href="menugraficas.jsp">Reportes</a></li>
       <li><a href="consultas.jsp">Consultas</a></li>
       <li><a href="tableros.jsp">Juego Actual</a></li>
@@ -83,14 +84,7 @@
          <br />
          <input type = "submit" value = "Cargar" />
       </form>
-      <h3>Historial: </h3>
-      <form action = "file.jsp" method = "post"
-         enctype = "multipart/form-data">
-         <input type = "file" name = "juego" size = "50" />
-         <br />
-         <br />
-         <input type = "submit" value = "Cargar" />
-      </form>
+
       
       
       
