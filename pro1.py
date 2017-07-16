@@ -52,11 +52,12 @@ class juego(object):
         self.tiempo=0
 
         self.jugador1=None
-        self.cuboinicial1=Cubo()
-        self.cubo1=Cubo()
-        self.acertados1 = Cubo()
-        self.fallados1 = Cubo()
-        self.cubodisparos1 = Cubo()
+        self.cuboinicial1=Cubo() #cuboinicial
+        self.cubo1=Cubo() # cubo que sirve como estado actual
+        self.acertados1 = Cubo() # acertados
+        self.fallados1 = Cubo() #fallados
+        self.cubodisparos1 = Cubo() # contiene los disparos del adversario?
+
         self.jugador2=None
         self.cubo2=Cubo()
         self.acertados2 = Cubo()
@@ -382,6 +383,7 @@ class Contacto(object):
         return (self.nombre == other.nombre and self.contra == other.contra)
 
 class Disparo(object):
+    parametro='x'
     def __init__(self,x='A',y=0,nave=1,tipo=1,resultado=1,emisor='',receptor='',fecha='',numero=0,tiempo=0):
         self.x = x
         self.y = y
@@ -394,7 +396,7 @@ class Disparo(object):
         self.fecha = fecha
         self.tiempo = tiempo
         self.numero = numero
-        self.parametro=None
+        self.parametro=Disparo.parametro
 
     def __str__(self):
         if self.parametro == 'x':
@@ -414,6 +416,8 @@ class Disparo(object):
                 return self.y < other.y
             else:
                 return self.numero < other.numero
+        else:
+            return self.numero < other.numero
 
     def __gt__(self,other):
         if self.parametro == 'x':
@@ -426,6 +430,8 @@ class Disparo(object):
                 return self.y > other.y
             else:
                 return self.numero > other.numero
+        else:
+            return self.numero < other.numero
 
 
 tem = Tempo()
@@ -652,7 +658,6 @@ def disparo(x,y,nivel,tipo,resultado,emisor,receptor,fecha,tiempo=0):
             contar(juegoactual.tiempo)
     juegoactual.disparos += 1
     dis = Disparo(x,y,nivel,tipo,resultado,emisor,receptor,fecha,juegoactual.disparos,tiempo)
-    dis.parametro='x'
     juegoactual.historial.insertar(juegoactual.historial.raiz,dis)
 
 @app.route('/disparar',methods=['POST'])
@@ -1085,7 +1090,6 @@ def cargar():
         usuario.lista.insertar(p)
         print('agregando partida a: ' + str(usuario))
         return 'partida agregada'
-
     elif tipo == 'juego':
         usuario1 = str(request.form['usuario1'])
         usuario2 = str(request.form['usuario2'])
@@ -1111,9 +1115,8 @@ def cargar():
     elif tipo == 'tiros':
         jugador = str(request.form['usuario'])
         posx = str(request.form['columna'])
-        posy = str(request.form['fila']
-        tiromasivo(jugador,1,posx,int(posy))
-        return 'correcto'
+        posy = str(request.form['fila'])
+        return tiromasivo(jugador,1,posx,int(posy))
     elif tipo == 'contactos':
         usuario = str(request.form['usuario'])
         nickname = str(request.form['nickname'])
@@ -1154,26 +1157,41 @@ def graf():
     imagen = str(request.form['imagen'])
     if nombre == 'matriz':
         if imagen == 'satelites':
-            us = ar.buscar(ar.raiz,nick)
-            us.cubo.satelites.graficar(imagen)
+            #us = ar.buscar(ar.raiz,nick)
+            if nick == juegoactual.jugador1:
+                juegoactual.cubo1.satelites.graficar(imagen)
+            else:
+                juegoactual.cubo2.satelites.graficar(imagen)
             print('graficando satelites')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'barcos':
             us = ar.buscar(ar.raiz,nick)
-            print('graficando barcos')
-            us.cubo.barcos.graficar(imagen)
+            #print('graficando barcos')
+            if nick == juegoactual.jugador1:
+                juegoactual.cubo1.barcos.graficar(imagen)
+            else:
+                juegoactual.cubo2.barcos.graficar(imagen)
+            #us.cubo.barcos.graficar(imagen)
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'aviones':
-            us = ar.buscar(ar.raiz,nick)
-            us.cubo.aviones.graficar(imagen)
+            #us = ar.buscar(ar.raiz,nick)
+            if nick == juegoactual.jugador1:
+                juegoactual.cubo1.aviones.graficar(imagen)
+            else:
+                juegoactual.cubo2.aviones.graficar(imagen)
+            #us.cubo.aviones.graficar(imagen)
             print('graficando aviones')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'submarinos':
-            us = ar.buscar(ar.raiz,nick)
-            us.cubo.submarinos.graficar(imagen)
+            #us = ar.buscar(ar.raiz,nick)
+            if nick == juegoactual.jugador1:
+                juegoactual.cubo1.submarinos.graficar(imagen)
+            else:
+                juegoactual.cubo2.submarinos.graficar(imagen)
+            #us.cubo.submarinos.graficar(imagen)
             print('graficando submarinos')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
@@ -1196,52 +1214,68 @@ def graf():
         return cadena
     elif nombre == 'acertados':
         if imagen == 'satelites':
-            us = ar.buscar(ar.raiz,nick)
-            us.acertados.satelites.graficar(imagen)
+            #us = ar.buscar(ar.raiz,nick)
+            if nick == juegoactual.jugador1:
+                juegoactual.acertados1.satelites.graficar(imagen)
+            else:
+                juegoactual.acertados2.satelites.graficar(imagen)
+            #us.acertados.satelites.graficar(imagen)
             print('graficando satelites')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'barcos':
-            us = ar.buscar(ar.raiz,nick)
-            print('graficando barcos')
-            us.acertados.barcos.graficar(imagen)
+            if nick == juegoactual.jugador1:
+                juegoactual.acertados1.barcos.graficar(imagen)
+            else:
+                juegoactual.acertados2.barcos.graficar(imagen)
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'aviones':
-            us = ar.buscar(ar.raiz,nick)
-            us.acertados.aviones.graficar(imagen)
+            if nick == juegoactual.jugador1:
+                juegoactual.acertados1.aviones.graficar(imagen)
+            else:
+                juegoactual.acertados2.aviones.graficar(imagen)
             print('graficando aviones')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'submarinos':
-            us = ar.buscar(ar.raiz,nick)
-            us.acertados.submarinos.graficar(imagen)
+            if nick == juegoactual.jugador1:
+                juegoactual.acertados1.submarinos.graficar(imagen)
+            else:
+                juegoactual.acertados2.submarinos.graficar(imagen)
             print('graficando submarinos')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         return cadena
     elif nombre == 'fallados':
         if imagen == 'satelites':
-            us = ar.buscar(ar.raiz,nick)
-            us.fallados.satelites.graficar(imagen)
+            if nick == juegoactual.jugador1:
+                juegoactual.fallados1.satelites.graficar(imagen)
+            else:
+                juegoactual.fallados2.satelites.graficar(imagen)
             print('graficando satelites')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'barcos':
-            us = ar.buscar(ar.raiz,nick)
-            print('graficando barcos')
-            us.fallados.barcos.graficar(imagen)
+            if nick == juegoactual.jugador1:
+                juegoactual.fallados1.barcos.graficar(imagen)
+            else:
+                juegoactual.fallados2.barcos.graficar(imagen)
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'aviones':
-            us = ar.buscar(ar.raiz,nick)
-            us.fallados.aviones.graficar(imagen)
+            if nick == juegoactual.jugador1:
+                juegoactual.fallados1.aviones.graficar(imagen)
+            else:
+                juegoactual.fallados2.aviones.graficar(imagen)
             print('graficando aviones')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
         elif imagen == 'submarinos':
-            us = ar.buscar(ar.raiz,nick)
-            us.fallados.submarinos.graficar(imagen)
+            if nick == juegoactual.jugador1:
+                juegoactual.fallados1.submarinos.graficar(imagen)
+            else:
+                juegoactual.fallados2.submarinos.graficar(imagen)
             print('graficando submarinos')
             with open("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen+".png",'rb') as imageFile:
                 cadena = base64.b64encode(imageFile.read())
@@ -1276,6 +1310,13 @@ def android():
     nombre = str(request.form['p'])
     print(nombre + ' desde android')
     return 'hola'
+
+@app.route('/paramb',methods=['POST'])
+def paramb():
+    param = str(request.form['param'])
+    Disparo.parametro=param.lower()
+    print('parametro: ' + param)
+    return 'establecido'
 
 #@app.route('/')
 

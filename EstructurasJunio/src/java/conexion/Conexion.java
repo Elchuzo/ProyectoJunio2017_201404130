@@ -306,6 +306,14 @@ public class Conexion {
         return r;
     }
     
+    public String param(String param) throws IOException{
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("param",param)
+                .build();
+        String r = getString("paramb", formBody);
+        return r;
+    }
+    
      public String tableroen(String nivel,String nickname) throws IOException{
         RequestBody formBody = new FormEncodingBuilder()
                 .add("nivel",nivel)

@@ -144,6 +144,8 @@ class MatrizDispersa(object):
             nodo = actual
             # print('dato actual: '+str(nodo.dato))
             while nodo.derecha is not None:
+                if contador > 0:
+                    nodo.dato += ' hundido: ' + str(nodo.hundido)
             #    print('graficando derecha')
                 matriz.node(str(nodo.derecha.dato))
                 matriz.edge(str(nodo.dato),str(nodo.derecha.dato))
@@ -162,6 +164,7 @@ class MatrizDispersa(object):
                 matriz.body.append('\t\t{rank=same;"' + str(nodo.arriba.dato) + '" -> "' + str(nodo.dato) + '";}')
 
             if actual.abajo is not None:
+                contador+=1
                 actual = actual.abajo
             else:
                 terminado = True
