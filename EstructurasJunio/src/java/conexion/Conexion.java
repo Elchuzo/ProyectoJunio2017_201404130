@@ -171,6 +171,94 @@ public class Conexion {
                          
                  }
                  }
+         else if("tiros".equals(tipo))
+         {
+             while ((nextLine = reader.readNext()) != null) {            
+                             
+                             RequestBody formBody = new FormEncodingBuilder()    
+                             .add("tipo","tiros")
+                             .add("usuario",nextLine[0])
+                             .add("columna",nextLine[1])
+                             .add("fila",nextLine[2])                       
+                         .build();
+                             String r;
+                         r = getString("carga", formBody);
+                             }
+         }
+         else if("historial".equals(tipo))
+         {
+              while ((nextLine = reader.readNext()) != null) {            
+                     RequestBody formBody = new FormEncodingBuilder()
+                         .add("tipo","partidas")
+                         .add("usuario",nextLine[0])
+                         .add("oponente",nextLine[1])
+                         .add("tiros",nextLine[2])
+                          .add("acertados",nextLine[3])
+                             .add("fallados",nextLine[4])
+                             .add("ganada",nextLine[5])
+                             .add("danio",nextLine[6])
+                         .build();
+                         String r;
+                         r = getString("carga", formBody);
+                 }
+     
+     }
+         else if("juego".equals(tipo))
+                 {
+                 while ((nextLine = reader.readNext()) != null) {            
+                     
+                             if(nextLine.length == 9)
+                             {
+                             RequestBody formBody = new FormEncodingBuilder()    
+                             .add("tipo","historial")
+                             .add("posx",nextLine[0])
+                             .add("posy",nextLine[1])
+                             .add("tipo",nextLine[2])
+                             .add("resultado",nextLine[3])
+                             .add("nave",nextLine[4])                           
+                             .add("emisor",nextLine[5])
+                             .add("receptor",nextLine[6])
+                             .add("fecha",nextLine[7])
+                             .add("tiempo",nextLine[8])
+                             .add("numero",nextLine[9])
+                         .build();
+                             String r;
+                         r = getString("carga", formBody);
+                             }
+                        else
+                             {
+                             RequestBody formBody = new FormEncodingBuilder()    
+                             .add("tipo","historial")
+                             .add("posx",nextLine[0])
+                             .add("posy",nextLine[1])
+                             .add("tipo",nextLine[2])
+                             .add("resultado",nextLine[3])
+                             .add("nave",nextLine[4])                           
+                             .add("emisor",nextLine[5])
+                             .add("receptor",nextLine[6])
+                             .add("fecha",nextLine[7])
+                             .add("tiempo","0")
+                             .add("numero",nextLine[9])
+                         .build();
+                             String r;
+                         r = getString("carga", formBody);    
+                             }                
+                 }
+         }
+         else if("contactos".equals(tipo))
+         {
+             while ((nextLine = reader.readNext()) != null) {            
+                             
+                             RequestBody formBody = new FormEncodingBuilder()    
+                             .add("tipo","contactos")
+                             .add("usuario",nextLine[0])
+                             .add("nickname",nextLine[1])
+                             .add("contra",nextLine[2])                       
+                         .build();
+                             String r;
+                         r = getString("carga", formBody);
+                             }
+         }
             }
        
 
