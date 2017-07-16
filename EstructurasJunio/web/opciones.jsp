@@ -26,6 +26,7 @@
     <ul class="nav navbar-nav">
       <li class="active"><a href="#">Home</a></li>
       <li><a href="carga.jsp">Cargar Archivo</a></li>
+      <li><a href="historialjuego.jsp">Historial</a></li>
       <li><a href="menugraficas.jsp">Reportes</a></li>
       <li><a href="consultas.jsp">Consultas</a></li>
       <li><a href="tableros.jsp">Juego Actual</a></li>
