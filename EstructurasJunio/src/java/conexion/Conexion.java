@@ -58,6 +58,7 @@ public class Conexion {
     
     public void cargar(String archivo,String tipo) throws FileNotFoundException,IOException
     {
+        
         CSVReader reader = new CSVReader(new FileReader(archivo));
         reader.readNext();
         String [] nextLine;
@@ -185,26 +186,10 @@ public class Conexion {
                          r = getString("carga", formBody);
                              }
          }
+
          else if("historial".equals(tipo))
-         {
-              while ((nextLine = reader.readNext()) != null) {            
-                     RequestBody formBody = new FormEncodingBuilder()
-                         .add("tipo","partidas")
-                         .add("usuario",nextLine[0])
-                         .add("oponente",nextLine[1])
-                         .add("tiros",nextLine[2])
-                          .add("acertados",nextLine[3])
-                             .add("fallados",nextLine[4])
-                             .add("ganada",nextLine[5])
-                             .add("danio",nextLine[6])
-                         .build();
-                         String r;
-                         r = getString("carga", formBody);
-                 }
-     
-     }
-         else if("juego".equals(tipo))
                  {
+                     limpiar();
                  while ((nextLine = reader.readNext()) != null) {            
                      
                              if(nextLine.length == 9)
@@ -231,7 +216,7 @@ public class Conexion {
                              .add("tipo","historial")
                              .add("posx",nextLine[0])
                              .add("posy",nextLine[1])
-                             .add("tipo",nextLine[2])
+                             .add("tipod",nextLine[2])
                              .add("resultado",nextLine[3])
                              .add("nave",nextLine[4])                           
                              .add("emisor",nextLine[5])
@@ -274,7 +259,49 @@ public class Conexion {
         String r = getString("disparar", formBody);
         return (r);
     }
+
+     public String elcontacto(String nombre, String nickname, String nuevo)   throws FileNotFoundException,IOException
+    {
+         RequestBody formBody = new FormEncodingBuilder()
+                .add("nombre",nombre)
+                .add("nickname",nickname)
+                 .add("nuevo",nuevo)
+                .build();
+        String r = getString("editarcontacto", formBody);
+        return (r);
+    }
    
+     public String eliminarcont(String nombre, String nickname)   throws FileNotFoundException,IOException
+    {
+         RequestBody formBody = new FormEncodingBuilder()
+                .add("nombre",nombre)
+                .add("nickname",nickname)
+                .build();
+        String r = getString("eliminarcontacto", formBody);
+        return (r);
+    }
+     
+     public String editarb(String tiro, String x,String y,String xx, String yy)   throws FileNotFoundException,IOException
+    {
+         RequestBody formBody = new FormEncodingBuilder()
+                .add("numero",tiro)
+                .add("x",x)
+                 .add("y",y)
+                 .add("xx",xx)
+                 .add("yy",yy)
+                .build();
+        String r = getString("editarb", formBody);
+        return (r);
+    }
+     
+public String limpiar()   throws FileNotFoundException,IOException
+    {
+         RequestBody formBody = new FormEncodingBuilder()
+                .add("jugador","hola")
+                .build();
+        String r = getString("limpiar", formBody);
+        return (r);
+    }   
    
     public String graficar(String parametro,String nickname,String imagen) throws IOException{
         RequestBody formBody = new FormEncodingBuilder()
@@ -329,6 +356,22 @@ public class Conexion {
                 .add("jugador",nickname)
                 .build();
         String r = getString("jugadores", formBody);
+        return r;
+    }
+    
+    public String conjuegos(String nickname) throws IOException{
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("jugador",nickname)
+                .build();
+        String r = getString("consultajuegos", formBody);
+        return r;
+    }
+    
+      public String conusuarios(String nickname) throws IOException{
+        RequestBody formBody = new FormEncodingBuilder()
+                .add("jugador",nickname)
+                .build();
+        String r = getString("consultausuarios", formBody);
         return r;
     }
     

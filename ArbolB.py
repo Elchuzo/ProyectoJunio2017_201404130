@@ -1,3 +1,4 @@
+import gc
 from graphviz import Digraph
 
 #clase para pruebas
@@ -275,6 +276,12 @@ class ArbolB(object):
             else:
                 #print("el dato no existe")
                 return None
+    def editar(self,dato,x,y):
+        #print('dato: ' + dato)
+        print(repr(dato))
+        d = self.buscar(self.raiz,dato)
+
+        d.dato.cambiar(x,y)
 
     def eliminar(self,dato):
         d = self.buscar(self.raiz,dato)
@@ -290,12 +297,18 @@ class ArbolB(object):
                     print("este si se puede eliminar")
         else:
             print("no hay nada")
+
     def graf(self,imagen):
         dot = Digraph(comment='ArbolB',format='png')
         dot.body.append('node [shape = record,height=.1];')
         self.recorrer(self.raiz,dot,0)
         dot.render("C:\\Users\\Abraham Jelkmann\\Desktop\\"+imagen,cleanup=True)
         dot.save(imagen,r"C:\\Users\\Abraham Jelkmann\\Desktop")
+
+    def limpiar(self):
+        self.raiz=None
+        gc.collect()
+        self.raiz=VectorB()
 
 
 class VectorB(object):
@@ -440,14 +453,17 @@ class VectorB(object):
         #codigo
 
     def buscar(self,valor):
+        print('metodo buscar: ' + str(valor))
         actual = self.p0
+        print('actual dato: ' + str(actual.dato))
         if actual.dato == valor:
             return actual
-        while actual.dato != valor and actual.siguiente is not None:
+        while actual.dato != valor and actual.siguiente.dato is not None:
             actual = actual.siguiente
+            print('actual dato: ' + str(actual.dato))
             if actual.dato == valor:
                 return actual
-        #print('No se econtró el dato')
+        print('No se econtró el dato')
         return None
 
 

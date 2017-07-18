@@ -123,6 +123,14 @@ public final class carga_jsp extends org.apache.jasper.runtime.HttpJspBase
       out.write("         <br />\n");
       out.write("         <input type = \"submit\" value = \"Cargar\" />\n");
       out.write("      </form>\n");
+      out.write("      <h3>Historial: </h3>\n");
+      out.write("      <form action = \"file.jsp\" method = \"post\"\n");
+      out.write("         enctype = \"multipart/form-data\">\n");
+      out.write("         <input type = \"file\" name = \"historial\" size = \"50\" />\n");
+      out.write("         <br />\n");
+      out.write("         <br />\n");
+      out.write("         <input type = \"submit\" value = \"Cargar\" />\n");
+      out.write("      </form>\n");
       out.write("\n");
       out.write("      \n");
       out.write("      \n");

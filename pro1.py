@@ -268,6 +268,10 @@ class partida(object):
         return json_data
     def __repr__(self):
         return str(self.numero)
+    def __lt__(self,other):
+        return self.tiros < other.tiros
+    def __gt__(self,other):
+        return self.tiros > other.tiros
 
 class NodoDoble(object):
     def __init__(self,dato=None):
@@ -309,6 +313,19 @@ class ListaDoble(object):
         cad+=str(nodo.dato)
         print(cad)
         return cad
+    def buscarnumero(self,dato):
+        nodo=self.inicio
+        encontrada=False
+        while not encontrada:
+            if nodo.dato.numero == dato:
+                encontrada = True
+                return nodo.dato.json()
+            else:
+                if nodo.derecha is not None:
+                    nodo = nodo.derecha
+                else:
+                    return None
+
     def mostrarnumeros(self):
         nodo = self.inicio
         cad=''
@@ -341,6 +358,84 @@ class ListaDoble(object):
                     inicial.derecha.dato = aux
                 inicial = inicial.derecha
 
+class Listaconsulta(object):
+    def __init__(self,inicio=None):
+        self.inicio=inicio
+        self.tama=0
+    def insertar(self,dato):
+        self.tama+=1
+        nuevo = NodoDoble(dato)
+        nuevo.derecha = self.inicio
+        if(self.inicio is not None):
+            self.inicio.izquierda = nuevo
+        self.inicio = nuevo
+    def graficar(self):
+        graf = Digraph(comment='ListaDoble')
+        nodo = self.inicio
+        while nodo.derecha is not None:
+            graf.node(str(nodo.dato))
+            print(nodo.dato)
+            graf.node(str(nodo.derecha.dato))
+            graf.edge(str(nodo.dato),str(nodo.derecha.dato))
+            graf.edge(str(nodo.derecha.dato),str(nodo.dato))
+            nodo = nodo.derecha
+        #graf.render('doble.gv',cleanup=True)
+        #graf.save('doble',"C:\\Users\\Abraham Jelkmann\\Desktop")
+        return graf
+    def imprimir(self):
+        nodo = self.inicio
+        cad=''
+        while nodo.derecha is not None:
+            cad += str(nodo.dato) +  ','
+            #print(nodo.dato)
+            nodo = nodo.derecha
+        cad+=str(nodo.dato)
+        print(cad)
+        return cad
+    def buscarnumero(self,dato):
+        nodo=self.inicio
+        encontrada=False
+        while not encontrada:
+            if nodo.dato.numero == dato:
+                encontrada = True
+                return nodo.dato.json()
+            else:
+                if nodo.derecha is not None:
+                    nodo = nodo.derecha
+                else:
+                    return None
+
+    def mostrarnumeros(self):
+        nodo = self.inicio
+        cad=''
+        while nodo.derecha is not None:
+            cad += str(nodo.dato.numero) +  ','
+            #print(nodo.dato)
+            nodo = nodo.derecha
+        cad+=str(nodo.dato.numero)
+        print(cad)
+        return cad
+    def insertarfinal(self,dato):
+        self.tama+=1
+        nuevo = NodoDoble(dato)
+        if self.inicio is not None:
+            inicial = self.inicio
+            while inicial.derecha is not None:
+                inicial = inicial.derecha
+            inicial.derecha = nuevo
+            nuevo.izquierda = inicial
+        else:
+            self.inicio=nuevo
+    def ordenamiento(self):
+        inicial = self.inicio
+        for x in range(2,self.tama):
+            inicial=self.inicio
+            while inicial.derecha is not None:
+                if inicial.dato.contactos.datos > inicial.derecha.dato.contactos.datos:
+                    aux = inicial.dato
+                    inicial.dato = inicial.derecha.dato
+                    inicial.derecha.dato = aux
+                inicial = inicial.derecha
 
 def Reprint(s):
     try:
@@ -380,7 +475,11 @@ class Contacto(object):
     def __gt__(self,other):
         return self.nombre > other.nombre
     def __eq__(self,other):
-        return (self.nombre == other.nombre and self.contra == other.contra)
+        return (self.nombre == other.nombre)
+    def __ge__(self,other):
+        return (self.nombre >= other.nombre)
+    def __le__(self,other):
+        return self.nombre <= other.nombre
 
 class Disparo(object):
     parametro='x'
@@ -409,6 +508,11 @@ class Disparo(object):
             cadena+= "\\n" + 'res: ' + str(self.res) + "\\n" + 'emisor: ' + str(self.emisor) + "\\n" + 'receptor: ' + str(self.receptor)  + "\\n" + 'fecha: ' + str(self.fecha)
             cadena+=  "\\n" + 'tiempo: ' + str(self.tiempo) + "\\n" + 'numero: ' + str(self.numero)
             return cadena
+        else:
+            cadena =  'numero: '   + str(self.numero) + "\\n" + 'posx: ' + str(self.x) + "\\n" + 'posy: ' + str(self.y) + "\\n" +  'nivel: ' + str(self.nave) + "\\n" +  'tipo: ' + str(self.tipo)
+            cadena+= "\\n" + 'res: ' + str(self.res) + "\\n" + 'emisor: ' + str(self.emisor) + "\\n" + 'receptor: ' + str(self.receptor)  + "\\n" + 'fecha: ' + str(self.fecha)
+            cadena+=  "\\n" + 'tiempo: ' + str(self.tiempo) + "\\n"
+            return cadena
     def __lt__(self,other):
         if self.parametro == 'x':
             if self.x != other.x:
@@ -435,34 +539,45 @@ class Disparo(object):
             else:
                 return self.numero > other.numero
         else:
-            return self.numero < other.numero
+            return self.numero > other.numero
+
+    def __eq__(self,other):
+        return self.numero == other.numero
+
+    def cambiar(self,x,y):
+        print('cambiando a: ' + str(x) + ' ' +str(y))
+        self.x=x
+        self.y=int(y)
 
 
+listaconsulta=Listaconsulta()
 tem = Tempo()
 historial = ArbolB()
 ha = Hash(47,60,30)
 ar = ArbolBinario()
 disparos = ListaDoble()
+juegos = ListaDoble()
 juegoactual = juego()
 ar.insertar(Usuario('chuz','chuz',0))
 
 
 def tiromasivo(jugador,nivel,posx,posy):
     if jugador == juegoactual.jugador1:
-        if jugador == juegoactual.turno:
+        if True:
             #dis = ar.buscar(ar.raiz,juegoactual.jugador2)
             if nivel == '1':
                 nod = juegoactual.cubo2.satelites.buscar(posx,int(posy))
-                print('satelites: ' + posx + " , " +  posy)
+                #print('satelites: ' + posx + " , " +  posy)
                 if nod is not None:
                     if not nod.hundido:
                         juegoactual.acertados1.satelites.insertar(posx,int(posy))
                         juegoactual.cubodisparos1.satelites.insertar(posx,int(posy),hundido=True)
                         juegoactual.tirosa1+=1
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),1,juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
                         nod.hundido = True
                         #Agregar código para ráfaga
-                        juegoactual.cambiarturno()
+
                         return 'exito'
                     else:
                         return 'nodo ya hundido'
@@ -470,21 +585,22 @@ def tiromasivo(jugador,nivel,posx,posy):
                     juegoactual.fallados1.satelites.insertar(posx,int(posy))
                     juegoactual.cubodisparos1.satelites.insertar(posx,int(posy))
                     juegoactual.tirosf1+=1
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                    disparo(posx,int(posy),1,juegoactual.tipo_disparo,0,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
                     #Agregar código para ráfaga
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             elif nivel == '2':
                 nod = juegoactual.cubo2.aviones.buscar(posx,int(posy))
                 if nod is not None:
                     if not nod.hundido:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,2,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),2,juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
                         juegoactual.acertados1.aviones.insertar(posx,int(posy))
                         juegoactual.tirosa1+=1
                         juegoactual.cubodisparos1.aviones.insertar(posx,int(posy),hundido=True)
                         nod.hundido = True
                         #ráfaga
-                        juegoactual.cambiarturno()
+
                         return 'exito'
                     else:
                         return 'nodo ya hundido'
@@ -492,62 +608,65 @@ def tiromasivo(jugador,nivel,posx,posy):
                     juegoactual.fallados1.aviones.insertar(posx,int(posy))
                     juegoactual.cubodisparos1.aviones.insertar(posx,int(posy))
                     juegoactual.tirosf1+=1
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,2,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                    disparo(posx,int(posy),2,juegoactual.tipo_disparo,0,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
                     #ráfaga
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             elif nivel == '3':
                 nod = juegoactual.cubo2.barcos.buscar(posx,int(posy))
                 if nod is not None:
                     if not nod.hundido:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,3,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),3,juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
                         juegoactual.acertados1.barcos.insertar(posx,int(posy))
                         juegoactual.tirosa1+=1
                         juegoactual.cubodisparos1.barcos.insertar(posx,int(posy),hundido=True)
                         nod.hundido = True
-                        juegoactual.cambiarturno()
+
                         return 'exito'
                     else:
                         return 'nodo ya hundido'
                 else:
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,3,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                    disparo(posx,int(posy),3,juegoactual.tipo_disparo,0,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
                     juegoactual.fallados1.barcos.insertar(posx,int(posy))
                     juegoactual.tirosf1+=1
                     juegoactual.cubodisparos1.barcos.insertar(posx,int(posy))
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             elif nivel == '4':
                 nod = juegoactual.cubo2.submarinos.buscar(posx,int(posy))
                 if nod is not None:
                     if not nod.hundido:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,4,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),4,juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
                         juegoactual.acertados1.submarinos.insertar(posx,int(posy))
                         juegoactual.tirosa1+=1
                         juegoactual.cubodisparos1.submarinos.insertar(posx,int(posy),hundido=True)
                         nod.hundido = True
-                        juegoactual.cambiarturno()
+
                         return 'exito'
                     else:
                         return 'nodo ya hundido'
                 else:
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,4,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today())
+                    disparo(posx,int(posy),4,juegoactual.tipo_disparo,0,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
                     juegoactual.fallados1.submarinos.insertar(posx,int(posy))
                     juegoactual.tirosf1+=1
                     juegoactual.cubodisparos1.submarinos.insertar(posx,int(posy))
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             else:
                 return 'nivel incorrecto'
         else:
             return 'no es el turno del jugador'
     elif jugador == juegoactual.jugador2:
-        if jugador == juegoactual.turno:
+        if True:
             #dis = ar.buscar(ar.raiz,juegoactual.jugador1)
             if nivel == '1':
                 nod = juegoactual.cubo1.satelites.buscar(posx,int(posy))
                 if nod is not None:
                     if not nod.hundido:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),1,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                         juegoactual.acertados2.satelites.insertar(posx,int(posy))
                         juegoactual.tirosa2+=1
                         juegoactual.cubodisparos2.satelites.insertar(posx,int(posy),hundido=True)
@@ -556,71 +675,74 @@ def tiromasivo(jugador,nivel,posx,posy):
                     else:
                         return 'nodo ya hundido'
                 else:
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                    disparo(posx,int(posy),1,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                     juegoactual.fallados2.satelites.insertar(posx,int(posy))
                     juegoactual.tirosf2+=1
                     juegoactual.cubodisparos2.satelites.insertar(posx,int(posy))
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             elif nivel == '2':
                 nod = juegoactual.cubo1.aviones.buscar(posx,int(posy))
                 if nod is not None:
                     if not nod.hundido:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,2,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),2,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                         juegoactual.acertados2.aviones.insertar(posx,int(posy))
                         juegoactual.tirosa2+=1
                         juegoactual.cubodisparos2.aviones.insertar(posx,int(posy),hundido=True)
                         nod.hundido = True
-                        juegoactual.cambiarturno()
+
                         return 'exito'
                     else:
                         return 'nodo ya hundido'
                 else:
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,2,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                    disparo(posx,int(posy),2,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                     juegoactual.fallados2.satelites.insertar(posx,int(posy))
                     juegoactual.tirosf2+=1
                     juegoactual.cubodisparos2.satelites.insertar(posx,int(posy))
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             elif nivel == '3':
                 nod = juegoactual.cubo1.barcos.buscar(posx,int(posy))
                 if nod is not None:
                     if not nod.hundido:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,3,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),3,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                         juegoactual.acertados2.barcos.insertar(posx,int(posy))
                         juegoactual.tirosa2+=1
                         juegoactual.cubodisparos2.barcos.insertar(posx,int(posy),hundido=True)
                         nod.hundido = True
-                        juegoactual.cambiarturno()
+
                         return 'exito'
                     else:
                         return 'nodo ya hundido'
                 else:
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,3,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                    disparo(posx,int(posy),3,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                     juegoactual.fallados2.barcos.insertar(posx,int(posy))
                     juegoactual.tirosf2+=1
                     juegoactual.cubodisparos2.barcos.insertar(posx,int(posy))
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             elif nivel == '4':
                 nod = juegoactual.cubo1.submarinos.buscar(posx,int(posy))
                 if nod is not None:
                     if not nod.hundido:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,1,4,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                        res=nod.nave.contar()
+                        disparo(posx,int(posy),4,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                         juegoactual.acertados2.submarinos.insertar(posx,int(posy))
                         juegoactual.tirosa2+=1
                         juegoactual.cubodisparos2.submarinos.insertar(posx,int(posy),hundido=True)
                         nod.hundido = True
-                        juegoactual.cambiarturno()
+
                         return 'exito'
                     else:
                         return 'nodo ya hundido'
                 else:
-                    disparo(posx,int(posy),juegoactual.tipo_disparo,0,4,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today())
+                    disparo(posx,int(posy),4,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                     juegoactual.fallados2.submarinos.insertar(posx,int(posy))
                     juegoactual.tirosf2+=1
                     juegoactual.cubodisparos2.submarinos.insertar(posx,int(posy))
-                    juegoactual.cambiarturno()
+
                     return 'fallo'
             else:
                 return 'nivel incorrecto'
@@ -666,6 +788,23 @@ def disparo(x,y,nivel,tipo,resultado,emisor,receptor,fecha,tiempo=0,res=''):
     dis.res = res
 
     juegoactual.historial.insertar(juegoactual.historial.raiz,dis)
+
+
+@app.route('/consultausuarios',methods=['POST'])
+def conusaruios():
+    par = str(request.form['jugador'])
+    #juegos.imprimir()
+    listaconsulta.ordenamiento()
+    cadena = listaconsulta.imprimir()
+    return cadena
+
+@app.route('/consultajuegos',methods=['POST'])
+def conjuegos():
+    par = str(request.form['jugador'])
+    #juegos.imprimir()
+    juegos.ordenamiento()
+    cadena = juegos.imprimir()
+    return cadena
 
 @app.route('/disparar',methods=['POST'])
 def disparar():
@@ -745,7 +884,7 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             res=nod.nave.contar()
-                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,3,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
+                            disparo(posx,int(posy),3,juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
                             juegoactual.acertados1.barcos.insertar(posx,int(posy))
                             juegoactual.tirosa1+=1
                             juegoactual.cubodisparos1.barcos.insertar(posx,int(posy),hundido=True)
@@ -755,7 +894,7 @@ def disparar():
                         else:
                             return 'nodo ya hundido'
                     else:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,3,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
+                        disparo(posx,int(posy),3,juegoactual.tipo_disparo,0,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
                         juegoactual.fallados1.barcos.insertar(posx,int(posy))
                         juegoactual.tirosf1+=1
                         juegoactual.cubodisparos1.barcos.insertar(posx,int(posy))
@@ -766,7 +905,7 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             res=nod.nave.contar()
-                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,4,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
+                            disparo(posx,int(posy),4,juegoactual.tipo_disparo,1,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res=res)
                             juegoactual.acertados1.submarinos.insertar(posx,int(posy))
                             juegoactual.tirosa1+=1
                             juegoactual.cubodisparos1.submarinos.insertar(posx,int(posy),hundido=True)
@@ -776,7 +915,7 @@ def disparar():
                         else:
                             return 'nodo ya hundido'
                     else:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,4,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
+                        disparo(posx,int(posy),4,juegoactual.tipo_disparo,0,juegoactual.jugador1,juegoactual.jugador2,datetime.date.today(),tiempo=revisar(),res='fallo')
                         juegoactual.fallados1.submarinos.insertar(posx,int(posy))
                         juegoactual.tirosf1+=1
                         juegoactual.cubodisparos1.submarinos.insertar(posx,int(posy))
@@ -794,7 +933,7 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             res=nod.nave.contar()
-                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
+                            disparo(posx,int(posy),1,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                             juegoactual.acertados2.satelites.insertar(posx,int(posy))
                             juegoactual.tirosa2+=1
                             juegoactual.cubodisparos2.satelites.insertar(posx,int(posy),hundido=True)
@@ -803,7 +942,7 @@ def disparar():
                         else:
                             return 'nodo ya hundido'
                     else:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
+                        disparo(posx,int(posy),1,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                         juegoactual.fallados2.satelites.insertar(posx,int(posy))
                         juegoactual.tirosf2+=1
                         juegoactual.cubodisparos2.satelites.insertar(posx,int(posy))
@@ -814,7 +953,7 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             res=nod.nave.contar()
-                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,2,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
+                            disparo(posx,int(posy),2,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                             juegoactual.acertados2.aviones.insertar(posx,int(posy))
                             juegoactual.tirosa2+=1
                             juegoactual.cubodisparos2.aviones.insertar(posx,int(posy),hundido=True)
@@ -824,7 +963,7 @@ def disparar():
                         else:
                             return 'nodo ya hundido'
                     else:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,2,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
+                        disparo(posx,int(posy),2,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                         juegoactual.fallados2.satelites.insertar(posx,int(posy))
                         juegoactual.tirosf2+=1
                         juegoactual.cubodisparos2.satelites.insertar(posx,int(posy))
@@ -835,7 +974,7 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             res=nod.nave.contar()
-                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,3,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
+                            disparo(posx,int(posy),3,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                             juegoactual.acertados2.barcos.insertar(posx,int(posy))
                             juegoactual.tirosa2+=1
                             juegoactual.cubodisparos2.barcos.insertar(posx,int(posy),hundido=True)
@@ -845,7 +984,7 @@ def disparar():
                         else:
                             return 'nodo ya hundido'
                     else:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,3,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
+                        disparo(posx,int(posy),3,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                         juegoactual.fallados2.barcos.insertar(posx,int(posy))
                         juegoactual.tirosf2+=1
                         juegoactual.cubodisparos2.barcos.insertar(posx,int(posy))
@@ -856,7 +995,7 @@ def disparar():
                     if nod is not None:
                         if not nod.hundido:
                             res=nod.nave.contar()
-                            disparo(posx,int(posy),juegoactual.tipo_disparo,1,4,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
+                            disparo(posx,int(posy),4,juegoactual.tipo_disparo,1,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res=res)
                             juegoactual.acertados2.submarinos.insertar(posx,int(posy))
                             juegoactual.tirosa2+=1
                             juegoactual.cubodisparos2.submarinos.insertar(posx,int(posy),hundido=True)
@@ -866,7 +1005,7 @@ def disparar():
                         else:
                             return 'nodo ya hundido'
                     else:
-                        disparo(posx,int(posy),juegoactual.tipo_disparo,0,4,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
+                        disparo(posx,int(posy),4,juegoactual.tipo_disparo,0,juegoactual.jugador2,juegoactual.jugador1,datetime.date.today(),tiempo=revisar(),res='fallo')
                         juegoactual.fallados2.submarinos.insertar(posx,int(posy))
                         juegoactual.tirosf2+=1
                         juegoactual.cubodisparos2.submarinos.insertar(posx,int(posy))
@@ -1015,6 +1154,19 @@ def partidas():
     return dato.lista.mostrarnumeros()
     #agregar partidas
 
+@app.route('/codigoq',methods=['POST'])
+def codigoq():
+    nombre = str(request.form['nombre'])
+    dato = str(request.form['dato'])
+    usuario = ar.buscar(ar.raiz,nombre)
+    js = usuario.lista.buscarnumero(int(dato))
+    img = qrcode.make(js)
+    img.save("C:\\Users\\Abraham Jelkmann\\Desktop\\qr.bmp")
+    with open("C:\\Users\\Abraham Jelkmann\\Desktop\\qr.bmp",'rb') as imageFile:
+        cadena = base64.b64encode(imageFile.read())
+    return cadena
+    #agregar partidas
+
 @app.route('/carga',methods=['POST'])
 def cargar():
     tipo = str(request.form['tipo'])
@@ -1026,6 +1178,7 @@ def cargar():
         u = Usuario(nombre.strip(),contra.strip(),int(conectado))
         ar.insertar(u)
         ha.insertar(u)
+        listaconsulta.insertar(u)
         print(nombre,contra,conectado)
         return "True"
 
@@ -1101,6 +1254,7 @@ def cargar():
         danio = str(request.form['danio'])
 
         p = partida(oponente,int(tiros),int(acertados),int(fallados),int(ganada),int(danio))
+        juegos.insertar(p)
         usuario = ar.buscar(ar.raiz,usuario)
         usuario.lista.insertar(p)
         print('agregando partida a: ' + str(usuario))
@@ -1131,7 +1285,9 @@ def cargar():
         jugador = str(request.form['usuario'])
         posx = str(request.form['columna'])
         posy = str(request.form['fila'])
-        return tiromasivo(jugador,1,posx,int(posy))
+        print(jugador + " " + posx + " " + posy)
+        print(tiromasivo(jugador,"1",posx,int(posy)))
+        return "tiro"
     elif tipo == 'contactos':
         usuario = str(request.form['usuario'])
         nickname = str(request.form['nickname'])
@@ -1145,19 +1301,23 @@ def cargar():
         return 'ingresado'
     elif tipo == 'historial':
         posx = str(request.form['posx'])
-        posy = str(request.form['posx'])
-        tipo = str(request.form['posx'])
-        resultado = str(request.form['posx'])
-        nave = str(request.form['posx'])
-        emi = str(request.form['posx'])
-        rece = str(request.form['posx'])
-        fecha = str(request.form['posx'])
-        tiempo = str(request.form['posx'])
-        numero = str(request.form['posx'])
+        posy = str(request.form['posy'])
+        tipo = str(request.form['tipod'])
+        resultado = str(request.form['resultado'])
+        nave = str(request.form['nave'])
+        emi = str(request.form['emisor'])
+        rece = str(request.form['receptor'])
+        fecha = str(request.form['fecha'])
+        tiempo = str(request.form['tiempo'])
+        numero = str(request.form['numero'])
         dat = Disparo(x=posx,y=int(posy),nave=int(nave),tipo=int(tipo),resultado=int(resultado),emisor=emi,receptor=rece,fecha=fecha,numero=int(numero),tiempo=tiempo)
         historial.insertar(historial.raiz,dat)
         return 'ingresado'
 
+@app.route('/limpiar',methods=['POST'])
+def limpiar():
+    historial.limpiar()
+    return 'limpio'
 
 @app.route('/errores',methods=['POST'])
 def errores():
@@ -1333,6 +1493,37 @@ def paramb():
     print('parametro: ' + param)
     return 'establecido'
 
+@app.route('/eliminarcontacto',methods=['POST'])
+def eliminarc():
+    nombre = str(request.form['nombre'])
+    nick = str(request.form['nickname'])
+    u = ar.buscar(ar.raiz,nombre)
+    u.contactos.eliminar(Contacto(nick,''))
+    return 'eliminado'
+
+@app.route('/editarcontacto',methods=['POST'])
+def editarc():
+    nombre = str(request.form['nombre'])
+    nick = str(request.form['nickname'])
+    nuevo=str(request.form['nuevo'])
+    u = ar.buscar(ar.raiz,nombre)
+    u.contactos.editar(Contacto(nick,''),nuevo)
+    return 'editado'
+
+@app.route('/editarb',methods=['POST'])
+def editarb():
+    tiro = str(request.form['numero'])
+    x = str(request.form['x'])
+    y = str(request.form['y'])
+    xx = str(request.form['xx'])
+    yy = str(request.form['yy'])
+    d = Disparo(x=xx,y=int(yy),numero=int(tiro))
+    d.parametro=Disparo.parametro
+    print(str(d))
+    nod = juegoactual.historial.editar(d,x,int(y))
+    return 'editado'
+
+
 #@app.route('/')
 
 
@@ -1379,6 +1570,6 @@ mat.graficar('asdf')
 numval('a')
 numval('B')
 """
-p=partida('chuz',32,2,30,1,3)
-img = qrcode.make(p.json())
-img.save("C:\\Users\\Abraham Jelkmann\\Desktop\\qr.bmp")
+#p=partida('chuz',32,2,30,1,3)
+#img = qrcode.make(p.json())
+#img.save("C:\\Users\\Abraham Jelkmann\\Desktop\\qr.bmp")

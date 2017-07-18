@@ -40,6 +40,19 @@
            
         %>
 
+        <form action="eliminarcontacto.jsp">
+            <input type="text" class="form-control" id="contacto" name="contacto" placeholder="contacto">
+            <br>
+        <button class="btn btn-default btn-lg pull-left">Eliminar contacto</button>
+        </form>
+        <br>
+        <form action="editarcontacto.jsp">
+            <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario">
+            <br>
+            <input type="text" class="form-control" id="nuevo" name="nuevo" placeholder="Nuevo">
+            <br>
+        <button class="btn btn-default btn-lg pull-left">editar contacto</button>
+        </form>
         
     </body>
 </html>

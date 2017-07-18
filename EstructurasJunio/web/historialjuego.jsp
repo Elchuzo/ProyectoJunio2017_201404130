@@ -20,7 +20,7 @@
       <a class="navbar-brand" href="#">Battleship</a>
     </div>
     <ul class="nav navbar-nav">
-      <li><a href="#">Home</a></li>
+      <li><a href="opciones.jsp">Home</a></li>
       <li ><a href="carga.jsp">Cargar Archivo</a></li>
       <li class="active"><a href="historialjuego.jsp">Historial</a></li>
       <li > <a href="menugraficas.jsp">Reportes</a></li>
@@ -33,13 +33,27 @@
     </head>
     <body>
         
-        <h2>Contactos</h2>
+        <h2>Historial</h2>
         <%
             
-        out.println("<img src=\"" + con.graficar("arbolb",session.getAttribute("nickname").toString(),"arbol") + "\">");
+        out.println("<img src=\"" + con.graficar("arbolb",session.getAttribute("nickname").toString(),"arbolb") + "\">");
            
         %>
-
+        
+        <form action="editarhistorial.jsp">
+            <input type="text" class="form-control" id="tiro" name="tiro" placeholder="Tiro">
+            <br>
+            <input type="text" class="form-control" id="xx" name="xx" placeholder="x">
+            <br>
+            <input type="text" class="form-control" id="yy" name="yy" placeholder="y">
+            <br>
+            <input type="text" class="form-control" id="x" name="x" placeholder="x">
+            <br>
+            <br>
+            <input type="text" class="form-control" id="y" name="y" placeholder="y">
+            <br>
+        <button class="btn btn-default btn-lg pull-left">editar tiro</button>
+        </form>
         
     </body>
 </html>

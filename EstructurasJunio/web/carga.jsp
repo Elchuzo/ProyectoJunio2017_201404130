@@ -84,6 +84,14 @@
          <br />
          <input type = "submit" value = "Cargar" />
       </form>
+      <h3>Historial: </h3>
+      <form action = "file.jsp" method = "post"
+         enctype = "multipart/form-data">
+         <input type = "file" name = "historial" size = "50" />
+         <br />
+         <br />
+         <input type = "submit" value = "Cargar" />
+      </form>
 
       
       

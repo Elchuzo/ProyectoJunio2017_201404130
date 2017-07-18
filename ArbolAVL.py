@@ -12,8 +12,10 @@ class NodoAvl(object):
 class AVL(object):
     def __init__(self,raiz=None):
         self.raiz=raiz
+        self.datos=0
 
     def insertar(self,dato):
+        self.datos+=1
         if self.raiz is None:
             self.raiz = NodoAvl(dato)
         else:
@@ -49,23 +51,31 @@ class AVL(object):
             hijo = nodo.izquierda
             while(hijo.derecha is not None): hijo = hijo.derecha
             nodo.dato = hijo.dato
-            self.eliminar(hijo)
+            self.eliminarnodo(hijo)
         else:
             hijo = nodo.derecha
             while(hijo.izquierda is not None): hijo = hijo.izquierda
             nodo.dato = hijo.dato
-            self.eliminar(hijo)
+            self.eliminarnodo(hijo)
 
     def eliminar(self,dato):
         if self.raiz is None:
             return
         nodo = self.raiz
         hijo = self.raiz
+        print('dato: ' +  repr(dato))
+        print('nodo: ' +  repr(nodo))
+
+        if(dato == nodo.dato):
+            self.datos-=1
+            self.eliminarnodo(nodo)
+            return
         while(hijo is not None):
             nodo = hijo
             hijo =  nodo.derecha if dato >= nodo.dato else nodo.izquierda
             if(dato == nodo.dato):
-                self.eliminar(nodo)
+                self.datos-=1
+                self.eliminarnodo(nodo)
                 return
 
     def rebalancear(self,nodo):
@@ -120,11 +130,11 @@ class AVL(object):
 
     def rotIzDer(self,nodo):
         nodo.izquierda = self.rotIz(nodo.izquierda)
-        return rotDer(nodo)
+        return self.rotDer(nodo)
 
     def rotDerIz(self,nodo):
-        nodo.derecha = rotDer(nodo.derecha)
-        return rotIz(nodo)
+        nodo.derecha = self.rotDer(nodo.derecha)
+        return self.rotIz(nodo)
 
     def altura(self,nodo):
         if nodo is None:
@@ -173,10 +183,11 @@ class AVL(object):
                 return self.buscar(raiz.izquierda,valor)
             else:
                 return self.buscar(raiz.derecha,valor)
+
     def editar(self,valor,nuevo):
         dat = self.buscar(self.raiz,valor)
         if dat is not None:
-            dat.dato = nuevo
+            dat.dato.nombre = nuevo
             print("el dato ha sido cambiado")
             return "el dato ha sido cambiado"
         else:

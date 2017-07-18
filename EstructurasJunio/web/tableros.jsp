@@ -22,7 +22,7 @@
       <a class="navbar-brand" href="#">Battleship</a>
     </div>
     <ul class="nav navbar-nav">
-      <li><a href="#">Home</a></li>
+      <li><a href="opciones.jsp">Home</a></li>
       <li ><a href="carga.jsp">Cargar Archivo</a></li>
       <li><a href="historialjuego.jsp">Historial</a></li>
       <li> <a href="menugraficas.jsp">Reportes</a></li>

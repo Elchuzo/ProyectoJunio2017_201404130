@@ -144,8 +144,8 @@ class MatrizDispersa(object):
             nodo = actual
             # print('dato actual: '+str(nodo.dato))
             while nodo.derecha is not None:
-                if contador > 0:
-                    nodo.dato += ' hundido: ' + str(nodo.hundido)
+                #if contador > 0:
+                    #nodo.dato += ' hundido: ' + str(nodo.hundido)
             #    print('graficando derecha')
                 matriz.node(str(nodo.derecha.dato))
                 matriz.edge(str(nodo.dato),str(nodo.derecha.dato))

@@ -126,4 +126,12 @@ class ArbolBinario(object):
         self.graficarconlista(raiz.izquierda,contador,dot)
         self.graficarconlista(raiz.derecha,contador,dot)
         return dot
-    
+    def recorrer(self,raiz,lista):
+        if raiz is None:
+            return
+        #print (raiz.dato)
+        #listas
+        lista.insertar(raiz.dato)
+        self.graficar(raiz.izquierda,contador,dot)
+        self.graficar(raiz.derecha,contador,dot)
+        return dot
